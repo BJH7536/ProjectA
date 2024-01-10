@@ -13,7 +13,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float speed = 2f;
     [SerializeField] private Vector2 InputVector = new Vector2(0,0);
     [SerializeField] private float jumpPower = 30f;
-    [SerializeField] private float horizontalVelocityLimit = 15.0f;
+    [SerializeField] private float velocityLimit = 15.0f;
     private PlayerInputActions _playerInputActions;
     
     private void Awake()
@@ -34,13 +34,17 @@ public class Player : MonoBehaviour
         _playerInputActions.PlayerAction.Jump.canceled += JumpCanceled;
 
         #endregion
-
     }
-    
+
+    private void Start()
+    {
+        Managers.Sound.playSoundEffect("str");
+    }
+
     private void FixedUpdate()
     {
         InputVector = _playerInputActions.PlayerAction.Move.ReadValue<Vector2>();
-        if(rb.velocity.magnitude < horizontalVelocityLimit)
+        if(rb.velocity.magnitude < velocityLimit)
             rb.AddForce(InputVector * speed, ForceMode2D.Impulse);
     }
     
