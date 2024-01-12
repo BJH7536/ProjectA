@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
@@ -35,7 +36,22 @@ public class Player : MonoBehaviour
         _playerInputActions.PlayerAction.Interact.started += InteractStarted;
         _playerInputActions.PlayerAction.Interact.performed += InteractPerformed;
         _playerInputActions.PlayerAction.Interact.canceled += InteractCanceled;
+        _playerInputActions.PlayerAction.WeaponExchange.performed += OnChange;
         #endregion
+    }
+
+    private void OnChange(InputAction.CallbackContext context)
+    {
+        if (context.action.actionMap["WeaponExchange"].activeControl.name == "1")
+        {
+            transform.GetChild(0).gameObject.SetActive(true);
+            transform.GetChild(1).gameObject.SetActive(false);
+        }
+        else if (context.action.actionMap["WeaponExchange"].activeControl.name == "2")
+        {
+            transform.GetChild(0).gameObject.SetActive(false);
+            transform.GetChild(1).gameObject.SetActive(true);
+        }
     }
 
     private void Interact_performed(InputAction.CallbackContext obj)
