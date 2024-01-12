@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,7 +17,9 @@ public class Player : MonoBehaviour
     [SerializeField] private float velocityLimit = 15.0f;
     private PlayerInputActions _playerInputActions;
 
-    public GameObject NPC;
+    [Header("NPC Interaction")]
+    [SerializeField] public GameObject NPC;
+    [SerializeField] private bool isNPCAvailable = false;
 
     private void Awake()
     {
@@ -62,10 +65,11 @@ public class Player : MonoBehaviour
         {
             Debug.Log(hit.collider.name);
             NPC = GameObject.Find("NPC");
+            isNPCAvailable = true;
         }
-        if (Vector2.Distance(transform.position, NPC.transform.position) > 3)
+        if (isNPCAvailable && Vector2.Distance(transform.position, NPC.transform.position) > 3)
         {
-            NPC = null;
+            NPC = GameObject.Find("NULLNPC");
         }
     }
     
