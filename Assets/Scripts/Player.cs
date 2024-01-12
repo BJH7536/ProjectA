@@ -63,12 +63,14 @@ public class Player : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(rb.position, Vector3.right, 1, LayerMask.GetMask("NPC"));
         if(hit.collider != null)
         {
-            Debug.Log(hit.collider.name);
-            NPC = GameObject.Find("NPC");
             isNPCAvailable = true;
+            Debug.Log("NPC Available : " + isNPCAvailable);
+            NPC = GameObject.Find("NPC");     
         }
         if (isNPCAvailable && Vector2.Distance(transform.position, NPC.transform.position) > 3)
         {
+            isNPCAvailable = false;
+            Debug.Log("NPC Available : " + isNPCAvailable);
             NPC = GameObject.Find("NULLNPC");
         }
     }
