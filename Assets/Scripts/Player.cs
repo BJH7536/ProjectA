@@ -32,8 +32,15 @@ public class Player : MonoBehaviour
         _playerInputActions.PlayerAction.Jump.started += JumpStarted;
         _playerInputActions.PlayerAction.Jump.performed += JumpPerformed;
         _playerInputActions.PlayerAction.Jump.canceled += JumpCanceled;
-
+        _playerInputActions.PlayerAction.Interact.started += InteractStarted;
+        _playerInputActions.PlayerAction.Interact.performed += InteractPerformed;
+        _playerInputActions.PlayerAction.Interact.canceled += InteractCanceled;
         #endregion
+    }
+
+    private void Interact_performed(InputAction.CallbackContext obj)
+    {
+        throw new NotImplementedException();
     }
 
     private void Start()
@@ -87,6 +94,21 @@ public class Player : MonoBehaviour
     {
         Debug.Log($"JumpCanceled {context}");
     }
-    
+
+    #endregion
+
+    #region Interact
+    void InteractStarted(InputAction.CallbackContext context)
+    {
+        Debug.Log($"InteractStarted {context}");
+    }
+    void InteractPerformed(InputAction.CallbackContext context)
+    {
+        Debug.Log($"InteractPerformed {context}");
+    }
+    void InteractCanceled(InputAction.CallbackContext context)
+    {
+        Debug.Log($"InteractCanceled {context}");
+    }
     #endregion
 }
