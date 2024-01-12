@@ -15,7 +15,9 @@ public class Player : MonoBehaviour
     [SerializeField] private float jumpPower = 30f;
     [SerializeField] private float velocityLimit = 15.0f;
     private PlayerInputActions _playerInputActions;
-    
+
+    public GameObject NPC;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -48,22 +50,34 @@ public class Player : MonoBehaviour
         Managers.Sound.playSoundEffect("str");
     }
 
+    
     private void FixedUpdate()
     {
         InputVector = _playerInputActions.PlayerAction.Move.ReadValue<Vector2>();
         if(rb.velocity.magnitude < velocityLimit)
             rb.AddForce(InputVector * speed, ForceMode2D.Impulse);
+
+        RaycastHit2D hit = Physics2D.Raycast(rb.position, Vector3.right, 1, LayerMask.GetMask("NPC"));
+        if(hit.collider != null)
+        {
+            Debug.Log(hit.collider.name);
+            NPC = GameObject.Find("NPC");
+        }
+        if (Vector2.Distance(transform.position, NPC.transform.position) > 3)
+        {
+            NPC = null;
+        }
     }
     
     #region Move
 
     void MoveStarted(InputAction.CallbackContext context)
     {
-        Debug.Log($"MoveStarted {context}");
+        //Debug.Log($"MoveStarted {context}");
     }
     void MovePerformed(InputAction.CallbackContext context)
     {
-        Debug.Log($"MovePerformed {context}");
+        //Debug.Log($"MovePerformed {context}");
         InputVector = context.ReadValue<Vector2>();
         
         if (InputVector.x == 0) sr.flipX = sr.flipX;
@@ -72,7 +86,7 @@ public class Player : MonoBehaviour
     }
     void MoveCanCeled(InputAction.CallbackContext context)
     {
-        Debug.Log($"MoveCanceled {context}");
+        //Debug.Log($"MoveCanceled {context}");
         InputVector = Vector2.zero;
         rb.velocity = new Vector2(0, rb.velocity.y);
     }
@@ -83,16 +97,16 @@ public class Player : MonoBehaviour
     
     void JumpStarted(InputAction.CallbackContext context)
     {
-        Debug.Log($"JumpStarted {context}");
+        //Debug.Log($"JumpStarted {context}");
         rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
     }
     void JumpPerformed(InputAction.CallbackContext context)
     {
-        Debug.Log($"JumpPerformed {context}");
+        //Debug.Log($"JumpPerformed {context}");
     }
     void JumpCanceled(InputAction.CallbackContext context)
     {
-        Debug.Log($"JumpCanceled {context}");
+        //Debug.Log($"JumpCanceled {context}");
     }
 
     #endregion
