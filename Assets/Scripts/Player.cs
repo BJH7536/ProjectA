@@ -17,11 +17,15 @@ public class Player : MonoBehaviour
     [SerializeField] private float jumpPower = 30f;
     [SerializeField] private float velocityLimit = 15.0f;
     private PlayerInputActions _playerInputActions;
+<<<<<<< HEAD
 
     [Header("NPC Interaction")]
     [SerializeField] public GameObject NPC;
     [SerializeField] private bool isNPCAvailable = false;
 
+=======
+    
+>>>>>>> parent of 78144b2 ([TEST] NPC 거리 탐지 테스트)
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -69,12 +73,12 @@ public class Player : MonoBehaviour
         Managers.Sound.playSoundEffect("str");
     }
 
-    
     private void FixedUpdate()
     {
         InputVector = _playerInputActions.PlayerAction.Move.ReadValue<Vector2>();
         if(rb.velocity.magnitude < velocityLimit)
             rb.AddForce(InputVector * speed, ForceMode2D.Impulse);
+<<<<<<< HEAD
 
         RaycastHit2D hit = Physics2D.Raycast(rb.position, Vector3.right, 1, LayerMask.GetMask("NPC"));
         if(hit.collider != null)
@@ -89,17 +93,19 @@ public class Player : MonoBehaviour
             Debug.Log("NPC Available : " + isNPCAvailable);
             NPC = GameObject.Find("NULLNPC");
         }
+=======
+>>>>>>> parent of 78144b2 ([TEST] NPC 거리 탐지 테스트)
     }
     
     #region Move
 
     void MoveStarted(InputAction.CallbackContext context)
     {
-        //Debug.Log($"MoveStarted {context}");
+        Debug.Log($"MoveStarted {context}");
     }
     void MovePerformed(InputAction.CallbackContext context)
     {
-        //Debug.Log($"MovePerformed {context}");
+        Debug.Log($"MovePerformed {context}");
         InputVector = context.ReadValue<Vector2>();
         
         if (InputVector.x == 0) sr.flipX = sr.flipX;
@@ -108,7 +114,7 @@ public class Player : MonoBehaviour
     }
     void MoveCanCeled(InputAction.CallbackContext context)
     {
-        //Debug.Log($"MoveCanceled {context}");
+        Debug.Log($"MoveCanceled {context}");
         InputVector = Vector2.zero;
         rb.velocity = new Vector2(0, rb.velocity.y);
     }
@@ -119,16 +125,16 @@ public class Player : MonoBehaviour
     
     void JumpStarted(InputAction.CallbackContext context)
     {
-        //Debug.Log($"JumpStarted {context}");
+        Debug.Log($"JumpStarted {context}");
         rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
     }
     void JumpPerformed(InputAction.CallbackContext context)
     {
-        //Debug.Log($"JumpPerformed {context}");
+        Debug.Log($"JumpPerformed {context}");
     }
     void JumpCanceled(InputAction.CallbackContext context)
     {
-        //Debug.Log($"JumpCanceled {context}");
+        Debug.Log($"JumpCanceled {context}");
     }
 
     #endregion
