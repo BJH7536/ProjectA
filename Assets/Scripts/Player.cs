@@ -17,15 +17,10 @@ public class Player : MonoBehaviour
     [SerializeField] private float jumpPower = 30f;
     [SerializeField] private float velocityLimit = 15.0f;
     private PlayerInputActions _playerInputActions;
-<<<<<<< HEAD
 
     [Header("NPC Interaction")]
     [SerializeField] public GameObject NPC;
     [SerializeField] private bool isNPCAvailable = false;
-
-=======
-    
->>>>>>> parent of 78144b2 ([TEST] NPC 거리 탐지 테스트)
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -78,7 +73,7 @@ public class Player : MonoBehaviour
         InputVector = _playerInputActions.PlayerAction.Move.ReadValue<Vector2>();
         if(rb.velocity.magnitude < velocityLimit)
             rb.AddForce(InputVector * speed, ForceMode2D.Impulse);
-<<<<<<< HEAD
+
 
         RaycastHit2D hit = Physics2D.Raycast(rb.position, Vector3.right, 1, LayerMask.GetMask("NPC"));
         if(hit.collider != null)
@@ -93,8 +88,7 @@ public class Player : MonoBehaviour
             Debug.Log("NPC Available : " + isNPCAvailable);
             NPC = GameObject.Find("NULLNPC");
         }
-=======
->>>>>>> parent of 78144b2 ([TEST] NPC 거리 탐지 테스트)
+
     }
     
     #region Move
