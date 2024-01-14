@@ -53,6 +53,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""WeaponExchange"",
+                    ""type"": ""Button"",
+                    ""id"": ""f49ea3d1-3786-4cff-ac73-89412ff715b9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -187,6 +196,50 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""50040575-f2d3-4b34-a78b-6270f50d8ce3"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WeaponExchange"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f220f2bb-b219-4be8-a4f8-540277b62c99"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WeaponExchange"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3265f7d4-b98b-4d54-a008-45511a4c2485"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WeaponExchange"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""af75d496-210a-4e48-8270-02046ae82f0b"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WeaponExchange"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -226,6 +279,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_PlayerAction_Move = m_PlayerAction.FindAction("Move", throwIfNotFound: true);
         m_PlayerAction_Jump = m_PlayerAction.FindAction("Jump", throwIfNotFound: true);
         m_PlayerAction_Interact = m_PlayerAction.FindAction("Interact", throwIfNotFound: true);
+        m_PlayerAction_WeaponExchange = m_PlayerAction.FindAction("WeaponExchange", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -290,6 +344,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerAction_Move;
     private readonly InputAction m_PlayerAction_Jump;
     private readonly InputAction m_PlayerAction_Interact;
+    private readonly InputAction m_PlayerAction_WeaponExchange;
     public struct PlayerActionActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -297,6 +352,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_PlayerAction_Move;
         public InputAction @Jump => m_Wrapper.m_PlayerAction_Jump;
         public InputAction @Interact => m_Wrapper.m_PlayerAction_Interact;
+        public InputAction @WeaponExchange => m_Wrapper.m_PlayerAction_WeaponExchange;
         public InputActionMap Get() { return m_Wrapper.m_PlayerAction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -315,6 +371,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
+            @WeaponExchange.started += instance.OnWeaponExchange;
+            @WeaponExchange.performed += instance.OnWeaponExchange;
+            @WeaponExchange.canceled += instance.OnWeaponExchange;
         }
 
         private void UnregisterCallbacks(IPlayerActionActions instance)
@@ -328,6 +387,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
+            @WeaponExchange.started -= instance.OnWeaponExchange;
+            @WeaponExchange.performed -= instance.OnWeaponExchange;
+            @WeaponExchange.canceled -= instance.OnWeaponExchange;
         }
 
         public void RemoveCallbacks(IPlayerActionActions instance)
@@ -368,5 +430,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnWeaponExchange(InputAction.CallbackContext context);
     }
 }
