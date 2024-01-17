@@ -15,6 +15,10 @@ public class Managers : MonoBehaviour
     public static ScriptManager Script => Instance._script;
     public static SoundManager Sound => Instance._sound;
     public static UIManager UI => Instance._ui;
+
+    [Header("playerInfom")]
+    private Player _player;
+    private float maxHp = 100;
     
     void Awake()
     {
@@ -35,5 +39,13 @@ public class Managers : MonoBehaviour
         
         DontDestroyOnLoad(go);
         _instance = go.GetComponent<Managers>();
+
+    }
+
+
+    void gameStart()
+    {
+        _player.playerHP= maxHp;
+
     }
 }

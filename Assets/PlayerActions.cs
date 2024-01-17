@@ -62,6 +62,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Attack"",
+                    ""type"": ""Button"",
+                    ""id"": ""600f2c4b-56e6-48a2-8257-a3e66359023f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -240,6 +249,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""WeaponExchange"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""666a2838-d01f-4f03-842e-c4e1ac0a9e3e"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -280,6 +300,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_PlayerAction_Jump = m_PlayerAction.FindAction("Jump", throwIfNotFound: true);
         m_PlayerAction_Interact = m_PlayerAction.FindAction("Interact", throwIfNotFound: true);
         m_PlayerAction_WeaponExchange = m_PlayerAction.FindAction("WeaponExchange", throwIfNotFound: true);
+        m_PlayerAction_Attack = m_PlayerAction.FindAction("Attack", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -345,6 +366,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerAction_Jump;
     private readonly InputAction m_PlayerAction_Interact;
     private readonly InputAction m_PlayerAction_WeaponExchange;
+    private readonly InputAction m_PlayerAction_Attack;
     public struct PlayerActionActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -353,6 +375,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_PlayerAction_Jump;
         public InputAction @Interact => m_Wrapper.m_PlayerAction_Interact;
         public InputAction @WeaponExchange => m_Wrapper.m_PlayerAction_WeaponExchange;
+        public InputAction @Attack => m_Wrapper.m_PlayerAction_Attack;
         public InputActionMap Get() { return m_Wrapper.m_PlayerAction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -374,6 +397,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @WeaponExchange.started += instance.OnWeaponExchange;
             @WeaponExchange.performed += instance.OnWeaponExchange;
             @WeaponExchange.canceled += instance.OnWeaponExchange;
+            @Attack.started += instance.OnAttack;
+            @Attack.performed += instance.OnAttack;
+            @Attack.canceled += instance.OnAttack;
         }
 
         private void UnregisterCallbacks(IPlayerActionActions instance)
@@ -390,6 +416,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @WeaponExchange.started -= instance.OnWeaponExchange;
             @WeaponExchange.performed -= instance.OnWeaponExchange;
             @WeaponExchange.canceled -= instance.OnWeaponExchange;
+            @Attack.started -= instance.OnAttack;
+            @Attack.performed -= instance.OnAttack;
+            @Attack.canceled -= instance.OnAttack;
         }
 
         public void RemoveCallbacks(IPlayerActionActions instance)
@@ -431,5 +460,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
         void OnWeaponExchange(InputAction.CallbackContext context);
+        void OnAttack(InputAction.CallbackContext context);
     }
 }

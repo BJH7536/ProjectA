@@ -16,6 +16,8 @@ public class Player : MonoBehaviour
     [SerializeField] private Vector2 InputVector = new Vector2(0,0);
     [SerializeField] private float jumpPower = 30f;
     [SerializeField] private float velocityLimit = 15.0f;
+    [SerializeField] public float playerHP;
+    [SerializeField] private float playerDamage = 10f;
     private PlayerInputActions _playerInputActions;
 
     [Header("NPC Interaction")]
@@ -41,27 +43,12 @@ public class Player : MonoBehaviour
         _playerInputActions.PlayerAction.Interact.performed += InteractPerformed;
         _playerInputActions.PlayerAction.Interact.canceled += InteractCanceled;
         _playerInputActions.PlayerAction.WeaponExchange.performed += OnChange;
+        _playerInputActions.PlayerAction.Attack.performed += OnAttack;
         #endregion
     }
 
-    private void OnChange(InputAction.CallbackContext context)
-    {
-        if (context.action.actionMap["WeaponExchange"].activeControl.name == "1")
-        {
-            transform.GetChild(0).gameObject.SetActive(true);
-            transform.GetChild(1).gameObject.SetActive(false);
-        }
-        else if (context.action.actionMap["WeaponExchange"].activeControl.name == "2")
-        {
-            transform.GetChild(0).gameObject.SetActive(false);
-            transform.GetChild(1).gameObject.SetActive(true);
-        }
-    }
 
-    private void Interact_performed(InputAction.CallbackContext obj)
-    {
-        throw new NotImplementedException();
-    }
+
 
     private void Start()
     {
@@ -147,4 +134,40 @@ public class Player : MonoBehaviour
         Debug.Log($"InteractCanceled {context}");
     }
     #endregion
+
+    #region WeaponChange
+    private void OnChange(InputAction.CallbackContext context)
+    {
+        if (context.action.actionMap["WeaponExchange"].activeControl.name == "1")
+        {
+            transform.GetChild(0).gameObject.SetActive(true);
+            transform.GetChild(1).gameObject.SetActive(false);
+        }
+        else if (context.action.actionMap["WeaponExchange"].activeControl.name == "2")
+        {
+            transform.GetChild(0).gameObject.SetActive(false);
+            transform.GetChild(1).gameObject.SetActive(true);
+        }
+    }
+    #endregion
+
+
+    #region Attack
+    private void OnAttack(InputAction.CallbackContext context)
+    {
+        if(context.action.actionMap["WeaponExchange"].activeControl.name == "x" && isNPCAvailable)
+        {
+
+        }
+    }
+    #endregion
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Enemy"))
+        {
+            //GameManager에서 무기의 damage를 가져와서 hp에 빼준다.
+        }
+    }
+
 }
