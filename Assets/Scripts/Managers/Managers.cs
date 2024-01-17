@@ -10,11 +10,13 @@ public class Managers : MonoBehaviour
     private ScriptManager _script = new ScriptManager();
     private SoundManager _sound = new SoundManager();
     private UIManager _ui = new UIManager();
+    private DataManager _data = new DataManager();
     
     public static CutSceneManager CutScene => Instance._cutScene;
     public static ScriptManager Script => Instance._script;
     public static SoundManager Sound => Instance._sound;
     public static UIManager UI => Instance._ui;
+    public static DataManager Data => Instance._data;
     
     void Awake()
     {
@@ -35,5 +37,7 @@ public class Managers : MonoBehaviour
         
         DontDestroyOnLoad(go);
         _instance = go.GetComponent<Managers>();
+        
+        Data.Init();
     }
 }

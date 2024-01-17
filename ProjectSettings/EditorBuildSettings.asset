@@ -6,7 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/LiveScriptReload/Scenes/ExampleSceneNetworked.unity
-    guid: 5f391072b8a570e40bcd7c72766735fc
+    path: Assets/Scenes/MainMenu.unity
+    guid: afc8255c0e5ce55409da19fa82d4d60e
+  - enabled: 1
+    path: Assets/Scenes/New Scene.unity
+    guid: c1ef9f48133062d4f914089e7b244371
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: e6680d1e3e92fba488520cc68ff7dedb, type: 2}
