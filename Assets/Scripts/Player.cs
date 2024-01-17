@@ -74,7 +74,7 @@ public class Player : MonoBehaviour
         if(rb.velocity.magnitude < velocityLimit)
             rb.AddForce(InputVector * speed, ForceMode2D.Impulse);
 
-
+        Debug.DrawRay(rb.position,Vector3.right,Color.red );
         RaycastHit2D hit = Physics2D.Raycast(rb.position, Vector3.right, 1, LayerMask.GetMask("NPC"));
         if(hit.collider != null)
         {
