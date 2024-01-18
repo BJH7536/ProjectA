@@ -5,16 +5,18 @@ using ToolTypes;
 
 public class Hammer : Tool
 {
-    private toolTypes type = toolTypes.Hammer;
-    private int toolDamage = 15;
+    private toolTypes Hammertype = toolTypes.Hammer;
+    private float HammerDamage=15;
 
     public override toolTypes getToolType()
     {
+        base.type = Hammertype;
         return type;
     }
 
-    public override int getToolDamage()
+    public override float getToolDamage()
     {
+        base.toolDamage= HammerDamage;
         return toolDamage;
     }
 }

@@ -17,16 +17,19 @@ public class Player : MonoBehaviour
     [SerializeField] private float jumpPower = 30f;
     [SerializeField] private float velocityLimit = 15.0f;
     [SerializeField] public float playerHP;
-    [SerializeField] private float playerDamage = 10f;
+    [SerializeField] private float playerDamage;
+    [SerializeField] private Tool tool;
     private PlayerInputActions _playerInputActions;
 
     [Header("NPC Interaction")]
     [SerializeField] public GameObject NPC;
     [SerializeField] private bool isNPCAvailable = false;
+    [SerializeField] private RaycastHit2D target;
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
+        tool=GetComponentInChildren<Tool>();
 
         #region About PlayerInput
         
@@ -65,6 +68,7 @@ public class Player : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(rb.position, Vector3.right, 1, LayerMask.GetMask("NPC"));
         if(hit.collider != null)
         {
+            target = hit;
             isNPCAvailable = true;
             Debug.Log("NPC Available : " + isNPCAvailable);
             NPC = GameObject.Find("NPC");     
@@ -138,16 +142,28 @@ public class Player : MonoBehaviour
     #region WeaponChange
     private void OnChange(InputAction.CallbackContext context)
     {
-        if (context.action.actionMap["WeaponExchange"].activeControl.name == "1")
+        //if (context.action.actionMap["WeaponExchange"].activeControl.name == "1")
+        //{
+        //    transform.GetChild(0).gameObject.SetActive(true);
+        //    transform.GetChild(1).gameObject.SetActive(false);
+        //    tool = transform.GetChild(0).GetComponent<Tool>();
+        //}
+        //else if ( == "2")
+        //{
+        //    transform.GetChild(0).gameObject.SetActive(false);
+        //    transform.GetChild(1).gameObject.SetActive(true);
+        //    tool = transform.GetChild(1).GetComponent<Tool>();
+        //}
+
+        Tool[] list= GetComponentsInChildren<Tool>();
+        foreach(Tool t in list)
         {
-            transform.GetChild(0).gameObject.SetActive(true);
-            transform.GetChild(1).gameObject.SetActive(false);
+            t.gameObject.SetActive(false);
         }
-        else if (context.action.actionMap["WeaponExchange"].activeControl.name == "2")
-        {
-            transform.GetChild(0).gameObject.SetActive(false);
-            transform.GetChild(1).gameObject.SetActive(true);
-        }
+        int Toolnum = int.Parse(context.action.actionMap["WeaponExchange"].activeControl.name)-1;
+        transform.GetChild(Toolnum).gameObject.SetActive(true);
+        tool= transform.GetChild(Toolnum).GetComponent<Tool>();
+        playerDamage=transform.GetChild(Toolnum).GetComponent<Tool>().getToolDamage();
     }
     #endregion
 
@@ -155,9 +171,25 @@ public class Player : MonoBehaviour
     #region Attack
     private void OnAttack(InputAction.CallbackContext context)
     {
-        if(context.action.actionMap["WeaponExchange"].activeControl.name == "x" && isNPCAvailable)
+        if (context.action.actionMap["Attack"].activeControl.name == "x" && isNPCAvailable)
         {
+            AttackorDecomp();
+        }
 
+        //Raycast에서 가져온 변수값 필요
+    }
+
+    void AttackorDecomp()
+    {
+        //모션
+        switch (target.transform.tag)
+        {
+            case "Enemy":
+                    break;
+            case "Parts":
+                break;
+            default:
+                break;
         }
     }
     #endregion
@@ -166,8 +198,22 @@ public class Player : MonoBehaviour
     {
         if (collision.CompareTag("Enemy"))
         {
-            //GameManager에서 무기의 damage를 가져와서 hp에 빼준다.
+            //GameManager에서 Enemy damage를 가져와서 hp에 빼준다.
+            playerHP -= collision.GetComponent<Enemy>().enemyDamage;
+           //IEnumerator knockBack()
+           //{
+
+            //    //yield return null;  // 1프레임 쉬기
+            //    //yield return new WaitForSeconds(2f);    // 2초 쉬기
+            //    yield return wait;//하나의 물리 프레임을 딜레이 주기
+            //    Vector3 playerPos = GameManager.instance.player.transform.position;
+            //    Vector3 dirVec = transform.position - playerPos;
+            //    rigid.AddForce(dirVec.normalized * 3, ForceMode2D.Impulse);
+
+            //}
         }
     }
+
+
 
 }

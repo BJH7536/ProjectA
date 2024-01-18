@@ -5,9 +5,9 @@ using ToolTypes;
 
 public abstract class Tool : MonoBehaviour
 {
-    private toolTypes type;
-    private int toolDamage;
+    public toolTypes type;
+    public float toolDamage;
     public abstract toolTypes getToolType();
-    public abstract int getToolDamage();
+    public abstract float getToolDamage();
 
 }

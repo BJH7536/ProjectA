@@ -19,10 +19,11 @@ public class Managers : MonoBehaviour
     [Header("playerInfom")]
     private Player _player;
     private float maxHp = 100;
-    
     void Awake()
     {
         Init();
+        _player = GameObject.Find("Player").GetComponent<Player>();
+        gameStart();
     }
 
     static void Init()
@@ -31,10 +32,12 @@ public class Managers : MonoBehaviour
         if (_instance != null) return;
         
         GameObject go = GameObject.Find("@Managers");
+        
         if (go == null)
         {
             go = new GameObject{name = "@Managers"};
             go.AddComponent<Managers>();
+        
         }
         
         DontDestroyOnLoad(go);
@@ -46,6 +49,5 @@ public class Managers : MonoBehaviour
     void gameStart()
     {
         _player.playerHP= maxHp;
-
     }
 }

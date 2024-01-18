@@ -5,16 +5,18 @@ using ToolTypes;
 
 public class Driver : Tool
 {
-    private toolTypes type = toolTypes.Driver;
-    private int toolDamage = 10;
+    private toolTypes Drivertype = toolTypes.Driver;
+    public float DriverDamage = 10;
 
     public override toolTypes getToolType() 
     {
+        base.type = Drivertype;
         return type;
     }
 
-    public override int getToolDamage()
+    public override float getToolDamage()
     {
+        base.toolDamage= DriverDamage;
         return toolDamage;
     }
 }
