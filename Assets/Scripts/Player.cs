@@ -7,18 +7,20 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
 using UnityEngine.Serialization;
+using VInspector;
 
 public class Player : MonoBehaviour
 {
+    [Tab("Components")]
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private SpriteRenderer sr;
+    [Tab("Information")]
     [SerializeField] private float speed = 2f;
     [SerializeField] private Vector2 InputVector = new Vector2(0,0);
     [SerializeField] private float jumpPower = 30f;
     [SerializeField] private float velocityLimit = 15.0f;
     private PlayerInputActions _playerInputActions;
-
-    [Header("NPC Interaction")]
+    [Tab("NPC Interaction")]
     [SerializeField] public GameObject NPC;
     [SerializeField] private bool isNPCAvailable = false;
     private void Awake()
