@@ -203,8 +203,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2688f939052ceba4e926a71a0bb5a095, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 0
   toolDamage: 0
-  toolDamage: 15
 --- !u!1 &984073033
 GameObject:
   m_ObjectHideFlags: 3
@@ -2336,7 +2336,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fa54c92fd4383a49839a2154103d481, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 0
   toolDamage: 0
+  DriverDamage: 10
 --- !u!1 &1898841858
 GameObject:
   m_ObjectHideFlags: 0
@@ -2350,7 +2352,7 @@ GameObject:
   - component: {fileID: 1898841861}
   m_Layer: 6
   m_Name: NPC
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
