@@ -43,6 +43,7 @@ public class Player : MonoBehaviour
         _playerInputActions.PlayerAction.Interact.performed += InteractPerformed;
         _playerInputActions.PlayerAction.Interact.canceled += InteractCanceled;
         _playerInputActions.PlayerAction.WeaponExchange.performed += OnChange;
+        _playerInputActions.PlayerAction.Escape.started += ExitGame;
         #endregion
     }
 
@@ -72,7 +73,7 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        InputVector = _playerInputActions.PlayerAction.Move.ReadValue<Vector2>();
+        //InputVector = _playerInputActions.PlayerAction.Move.ReadValue<Vector2>();
         if(rb.velocity.magnitude < velocityLimit)
             rb.AddForce(InputVector * speed, ForceMode2D.Impulse);
 
@@ -148,5 +149,18 @@ public class Player : MonoBehaviour
     {
         Debug.Log($"InteractCanceled {context}");
     }
+    #endregion
+    
+    #region Exit
+
+    void ExitGame(InputAction.CallbackContext context)
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit(); // 어플리케이션 종료
+#endif
+    }
+    
     #endregion
 }
