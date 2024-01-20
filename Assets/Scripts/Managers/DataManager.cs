@@ -12,32 +12,14 @@ public class PlayerData
     public Vector3 pos;     // 위치
 }
 
-// 테스트를 위해서 MonoBehaviour를 상속받는 버전으로 만듬.
-// 이를 없애고 Managers 아래로 넣어야함
-public class DataManager : MonoBehaviour
+public class DataManager
 {
-    public static DataManager instance;    // Managers 아래로 갈 때 없애야 함
-    
     private PlayerData _nowPlayer;
     
     private string _path;    // 저장 경로 
     private string _fileName = "saveData";
     // 실제 위치는 C:\Users\[user name]\AppData\LocalLow\[company name]\[product name] + "/" + _fileName
-
-    private void Awake()    // Managers 아래로 갈 때 없애야 함
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else if (instance != this)
-        {
-            Destroy(instance.gameObject);
-        }
-        DontDestroyOnLoad(this.gameObject);
-        Init();     
-    }
-
+    
     public void Init()
     {
         _nowPlayer = new PlayerData();
@@ -46,6 +28,7 @@ public class DataManager : MonoBehaviour
 
     public void SaveData()
     {
+        if (Managers.Scene.CurrentSceneType != Define.Scene.InGameScene) return;
         // 현재 플레이어의 위치를 가져와서
         _nowPlayer.pos = GameObject.Find("Player").transform.position;
         
