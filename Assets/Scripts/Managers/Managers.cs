@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [DefaultExecutionOrder(0)]
@@ -11,13 +12,19 @@ public class Managers : MonoBehaviour
     private SoundManager _sound = new SoundManager();
     private UIManager _ui = new UIManager();
     private DataManager _data = new DataManager();
+    private ResourceManager _resource = new ResourceManager();
+    private SceneManagerEx _scene = new SceneManagerEx();
+    private GameManagerEx _game = new GameManagerEx();
     
     public static CutSceneManager CutScene => Instance._cutScene;
     public static ScriptManager Script => Instance._script;
     public static SoundManager Sound => Instance._sound;
     public static UIManager UI => Instance._ui;
     public static DataManager Data => Instance._data;
-    
+    public static ResourceManager Resource => Instance._resource;
+    public static SceneManagerEx Scene => Instance._scene;
+    public static GameManagerEx Game => Instance._game;
+
     void Awake()
     {
         Init();
@@ -39,5 +46,10 @@ public class Managers : MonoBehaviour
         _instance = go.GetComponent<Managers>();
         
         Data.Init();
+    }
+
+    private void OnApplicationQuit()
+    {
+        Managers.Data.SaveData();
     }
 }
