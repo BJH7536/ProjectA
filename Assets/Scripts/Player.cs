@@ -30,9 +30,10 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         tool=GetComponentInChildren<Tool>();
+        playerDamage = transform.GetChild(0).GetComponent<Tool>().getToolDamage();
 
         #region About PlayerInput
-        
+
         // PlayerInput을 컴포넌트 대신 스크립트로
         _playerInputActions = new PlayerInputActions();
         _playerInputActions.Enable();
@@ -86,11 +87,11 @@ public class Player : MonoBehaviour
 
     void MoveStarted(InputAction.CallbackContext context)
     {
-        Debug.Log($"MoveStarted {context}");
+        //Debug.Log($"MoveStarted {context}");
     }
     void MovePerformed(InputAction.CallbackContext context)
     {
-        Debug.Log($"MovePerformed {context}");
+        //Debug.Log($"MovePerformed {context}");
         InputVector = context.ReadValue<Vector2>();
         
         if (InputVector.x == 0) sr.flipX = sr.flipX;
@@ -99,7 +100,7 @@ public class Player : MonoBehaviour
     }
     void MoveCanCeled(InputAction.CallbackContext context)
     {
-        Debug.Log($"MoveCanceled {context}");
+        //Debug.Log($"MoveCanceled {context}");
         InputVector = Vector2.zero;
         rb.velocity = new Vector2(0, rb.velocity.y);
     }
@@ -110,16 +111,16 @@ public class Player : MonoBehaviour
     
     void JumpStarted(InputAction.CallbackContext context)
     {
-        Debug.Log($"JumpStarted {context}");
+       // Debug.Log($"JumpStarted {context}");
         rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
     }
     void JumpPerformed(InputAction.CallbackContext context)
     {
-        Debug.Log($"JumpPerformed {context}");
+        //Debug.Log($"JumpPerformed {context}");
     }
     void JumpCanceled(InputAction.CallbackContext context)
     {
-        Debug.Log($"JumpCanceled {context}");
+        //Debug.Log($"JumpCanceled {context}");
     }
 
     #endregion
@@ -171,7 +172,7 @@ public class Player : MonoBehaviour
     #region Attack
     private void OnAttack(InputAction.CallbackContext context)
     {
-        if (context.action.actionMap["Attack"].activeControl.name == "x" && isNPCAvailable)
+        if (context.action.actionMap["Attack"].activeControl.name == "x")
         {
             AttackorDecomp();
         }
@@ -185,8 +186,41 @@ public class Player : MonoBehaviour
         switch (target.transform.tag)
         {
             case "Enemy":
-                    break;
+                if (target.transform.gameObject.GetComponent<Enemy>().getEnemyHP()-playerDamage > 0 )
+                {
+                    target.transform.gameObject.GetComponent<Enemy>().setEnemyHP(target.transform.gameObject.GetComponent<Enemy>().getEnemyHP() - playerDamage);
+                    Debug.Log(target.transform.gameObject.GetComponent<Enemy>().getEnemyHP());
+                }
+                else
+                {
+                    Debug.Log("killed");
+                }
+          
+                break;
             case "Parts":
+                if (tool.getToolType() == ToolTypes.toolTypes.Hammer)
+                { 
+                    if (target.transform.gameObject.GetComponent<Parts>().getPartsHP()-10 > 0)
+                    {
+                        target.transform.gameObject.GetComponent<Parts>().setPartsHP(target.transform.gameObject.GetComponent<Parts>().getPartsHP() - 10);
+                        Debug.Log(target.transform.gameObject.GetComponent<Parts>().getPartsHP());
+                    }
+                    else
+                    {
+                        Debug.Log("Complete P");
+                    }
+                }else if(tool.getToolType() == ToolTypes.toolTypes.Driver)
+                {
+                    if (target.transform.gameObject.GetComponent<Parts>().getPartsHP()-5 > 0)
+                    {
+                        target.transform.gameObject.GetComponent<Parts>().setPartsHP(target.transform.gameObject.GetComponent<Parts>().getPartsHP() - 5);
+                        Debug.Log(target.transform.gameObject.GetComponent<Parts>().getPartsHP());
+                    }
+                    else
+                    {
+                        Debug.Log("Complete P");
+                    }
+                }
                 break;
             default:
                 break;
@@ -199,7 +233,7 @@ public class Player : MonoBehaviour
         if (collision.CompareTag("Enemy"))
         {
             //GameManager에서 Enemy damage를 가져와서 hp에 빼준다.
-            playerHP -= collision.GetComponent<Enemy>().enemyDamage;
+            playerHP -= collision.GetComponent<Enemy>().getEnemyDamage();
            //IEnumerator knockBack()
            //{
 

@@ -5,8 +5,9 @@ using ToolTypes;
 
 public class Hammer : Tool
 {
-    private toolTypes Hammertype = toolTypes.Hammer;
-    private float HammerDamage=15;
+    [Header("Hammer Stat")]
+    [SerializeField] private toolTypes Hammertype = toolTypes.Hammer;
+    [SerializeField] private float HammerDamage=15;
 
     public override toolTypes getToolType()
     {

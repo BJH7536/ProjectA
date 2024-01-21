@@ -5,8 +5,9 @@ using ToolTypes;
 
 public class Driver : Tool
 {
-    private toolTypes Drivertype = toolTypes.Driver;
-    public float DriverDamage = 10;
+    [Header("Driver Stat")]
+    [SerializeField] private toolTypes Drivertype = toolTypes.Driver;
+    [SerializeField] private float DriverDamage = 10;
 
     public override toolTypes getToolType() 
     {

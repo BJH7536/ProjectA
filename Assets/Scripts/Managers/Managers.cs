@@ -19,10 +19,12 @@ public class Managers : MonoBehaviour
     [Header("playerInfom")]
     private Player _player;
     private float maxHp = 100;
+
+
+
     void Awake()
     {
         Init();
-        _player = GameObject.Find("Player").GetComponent<Player>();
         gameStart();
     }
 
@@ -48,6 +50,8 @@ public class Managers : MonoBehaviour
 
     void gameStart()
     {
-        _player.playerHP= maxHp;
+        GameObject.Find("Player").GetComponent<Player>().playerHP= maxHp;
+        GameObject.Find("NPC").GetComponent<Enemy>().setEnemyHP(maxHp);
+        GameObject.Find("Parts").GetComponent<Parts>().setPartsHP(maxHp);
     }
 }
