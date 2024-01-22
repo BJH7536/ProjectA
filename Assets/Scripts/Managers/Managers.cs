@@ -52,6 +52,7 @@ public class Managers : MonoBehaviour
     {
         GameObject.Find("Player").GetComponent<Player>().playerHP= maxHp;
         GameObject.Find("NPC").GetComponent<Enemy>().setEnemyHP(maxHp);
+        GameObject.Find("NPC").GetComponent<Enemy>().setEnemyDam(20);
         GameObject.Find("Parts").GetComponent<Parts>().setPartsHP(maxHp);
     }
 }

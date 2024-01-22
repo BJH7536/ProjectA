@@ -31,7 +31,7 @@ public class Player : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         tool=GetComponentInChildren<Tool>();
         playerDamage = transform.GetChild(0).GetComponent<Tool>().getToolDamage();
-
+        NPC = GameObject.Find("NULLNPC");
         #region About PlayerInput
 
         // PlayerInput을 컴포넌트 대신 스크립트로
@@ -71,13 +71,13 @@ public class Player : MonoBehaviour
         {
             target = hit;
             isNPCAvailable = true;
-            Debug.Log("NPC Available : " + isNPCAvailable);
+            //Debug.Log("NPC Available : " + isNPCAvailable);
             NPC = GameObject.Find("NPC");     
         }
         if (isNPCAvailable && Vector2.Distance(transform.position, NPC.transform.position) > 3)
         {
             isNPCAvailable = false;
-            Debug.Log("NPC Available : " + isNPCAvailable);
+            //Debug.Log("NPC Available : " + isNPCAvailable);
             NPC = GameObject.Find("NULLNPC");
         }
 
@@ -228,26 +228,17 @@ public class Player : MonoBehaviour
     }
     #endregion
 
-    private void OnTriggerEnter2D(Collider2D collision)
+
+
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.CompareTag("Enemy"))
+        if (collision.collider.tag=="Enemy")
         {
             //GameManager에서 Enemy damage를 가져와서 hp에 빼준다.
-            playerHP -= collision.GetComponent<Enemy>().getEnemyDamage();
-           //IEnumerator knockBack()
-           //{
-
-            //    //yield return null;  // 1프레임 쉬기
-            //    //yield return new WaitForSeconds(2f);    // 2초 쉬기
-            //    yield return wait;//하나의 물리 프레임을 딜레이 주기
-            //    Vector3 playerPos = GameManager.instance.player.transform.position;
-            //    Vector3 dirVec = transform.position - playerPos;
-            //    rigid.AddForce(dirVec.normalized * 3, ForceMode2D.Impulse);
-
-            //}
+            playerHP -= collision.collider.gameObject.GetComponent<Enemy>().getEnemyDamage();
+            Debug.Log(playerHP);
         }
     }
-
 
 
 }
