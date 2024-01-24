@@ -8,6 +8,37 @@ public class InventoryManager : MonoBehaviour
     public int maxStackedItems = 4;
     public InventorySlot[] inventorySlots;
     public GameObject inventoryItemPrefab;
+    // Default selectedSlot 번호
+    int selectedSlot = -1;
+
+    private void Start()
+    {
+        ChangeSelectedSlot(0);
+    }
+
+    private void Update()
+    {
+        if (Input.inputString != null)
+        {
+            bool isNumber = int.TryParse(Input.inputString, out int number);
+            if(isNumber && number > 0 && number < 8)
+            {
+                ChangeSelectedSlot(number - 1);
+            }
+        }
+    }
+
+    void ChangeSelectedSlot(int newValue)
+    {
+        // 선택된 인덱스가 0 이상인지 검사
+        if (selectedSlot >= 0)
+        {
+            inventorySlots[selectedSlot].Deselect();
+        }
+
+        inventorySlots[newValue].Select();
+        selectedSlot = newValue;
+    }
 
     public bool AddItem(Item item)
     {
