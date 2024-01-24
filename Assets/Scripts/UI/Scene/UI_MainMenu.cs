@@ -42,8 +42,7 @@ public class UI_MainMenu : UI_Scene
 
     void Settings()
     {
-        // 설정 팝업 띄우기
-        // 팝업 안에는 기능을 넣고
+        Managers.UI.ShowPopupUI<UI_SettingsPopup>();
     }
 
     public void ExitGame()
