@@ -180,6 +180,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 7543267973999213392, guid: e5ea76cb5aa288143a1b7e3080904620, type: 3}
+      propertyPath: rb
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7543267973999213392, guid: e5ea76cb5aa288143a1b7e3080904620, type: 3}
+      propertyPath: sr
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7543267973999213392, guid: e5ea76cb5aa288143a1b7e3080904620, type: 3}
+      propertyPath: isNPCAvailable
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
