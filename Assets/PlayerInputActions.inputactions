@@ -64,17 +64,6 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "up",
-                    "id": "dabcfea4-33e3-4b03-acba-4fcf146a6ae5",
-                    "path": "<Keyboard>/w",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PC",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
                     "name": "down",
                     "id": "bda67188-387b-45df-9b1a-5c3607035507",
                     "path": "<Keyboard>/s",
