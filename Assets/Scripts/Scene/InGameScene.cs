@@ -10,7 +10,7 @@ public class InGameScene : BaseScene
             return false;
 
         SceneType = Define.Scene.InGameScene;
-        //Managers.UI.ShowSceneUI<UI_InGame>();
+        Managers.UI.ShowSceneUI<UI_InGame>();
         Debug.Log("InGame");
         
         if (Managers.Game.thisGameis == Define.ThisGameis.LoadedGame)
@@ -21,6 +21,8 @@ public class InGameScene : BaseScene
         {
             // 저장된 데이터 지우기
         }
+
+        Time.timeScale = 1.0f;
         
         return true;
     }
