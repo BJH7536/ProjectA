@@ -27,24 +27,8 @@ public class Player : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
-
-        #region About PlayerInput
         
-        // PlayerInput을 컴포넌트 대신 스크립트로
         _playerInputActions = new PlayerInputActions();
-        _playerInputActions.Enable();
-        _playerInputActions.PlayerAction.Move.started += MoveStarted;
-        _playerInputActions.PlayerAction.Move.performed += MovePerformed;
-        _playerInputActions.PlayerAction.Move.canceled += MoveCanCeled;
-        _playerInputActions.PlayerAction.Jump.started += JumpStarted;
-        _playerInputActions.PlayerAction.Jump.performed += JumpPerformed;
-        _playerInputActions.PlayerAction.Jump.canceled += JumpCanceled;
-        _playerInputActions.PlayerAction.Interact.started += InteractStarted;
-        _playerInputActions.PlayerAction.Interact.performed += InteractPerformed;
-        _playerInputActions.PlayerAction.Interact.canceled += InteractCanceled;
-        _playerInputActions.PlayerAction.WeaponExchange.performed += OnChange;
-        _playerInputActions.PlayerAction.Escape.started += ExitGame;
-        #endregion
     }
 
     private void OnChange(InputAction.CallbackContext context)
@@ -61,14 +45,42 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void Interact_performed(InputAction.CallbackContext obj)
+    private void OnEnable()
     {
-        throw new NotImplementedException();
+        #region About PlayerInput
+        // PlayerInput을 컴포넌트 대신 스크립트로
+        _playerInputActions.PlayerAction.Move.started += MoveStarted;
+        _playerInputActions.PlayerAction.Move.performed += MovePerformed;
+        _playerInputActions.PlayerAction.Move.canceled += MoveCanCeled;
+        _playerInputActions.PlayerAction.Jump.started += JumpStarted;
+        _playerInputActions.PlayerAction.Jump.performed += JumpPerformed;
+        _playerInputActions.PlayerAction.Jump.canceled += JumpCanceled;
+        _playerInputActions.PlayerAction.Interact.started += InteractStarted;
+        _playerInputActions.PlayerAction.Interact.performed += InteractPerformed;
+        _playerInputActions.PlayerAction.Interact.canceled += InteractCanceled;
+        _playerInputActions.PlayerAction.WeaponExchange.performed += OnChange;
+        _playerInputActions.PlayerAction.Escape.started += Pause;
+        _playerInputActions.Enable();
+        #endregion
     }
-
-    private void Start()
+    
+    private void OnDisable()
     {
-        Managers.Sound.playSoundEffect("str");
+        #region About PlayerInput
+        // PlayerInput을 컴포넌트 대신 스크립트로
+        _playerInputActions.PlayerAction.Move.started -= MoveStarted;
+        _playerInputActions.PlayerAction.Move.performed -= MovePerformed;
+        _playerInputActions.PlayerAction.Move.canceled -= MoveCanCeled;
+        _playerInputActions.PlayerAction.Jump.started -= JumpStarted;
+        _playerInputActions.PlayerAction.Jump.performed -= JumpPerformed;
+        _playerInputActions.PlayerAction.Jump.canceled -= JumpCanceled;
+        _playerInputActions.PlayerAction.Interact.started -= InteractStarted;
+        _playerInputActions.PlayerAction.Interact.performed -= InteractPerformed;
+        _playerInputActions.PlayerAction.Interact.canceled -= InteractCanceled;
+        _playerInputActions.PlayerAction.WeaponExchange.performed -= OnChange;
+        _playerInputActions.PlayerAction.Escape.started -= Pause;
+        _playerInputActions.Disable();
+        #endregion
     }
 
     private void FixedUpdate()
@@ -151,15 +163,11 @@ public class Player : MonoBehaviour
     }
     #endregion
     
-    #region Exit
+    #region Pause
 
-    void ExitGame(InputAction.CallbackContext context)
+    void Pause(InputAction.CallbackContext context)
     {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit(); // 어플리케이션 종료
-#endif
+        Managers.UI.ShowPopupUI<UI_PausePopup>();
     }
     
     #endregion
