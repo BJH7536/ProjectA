@@ -22,7 +22,6 @@ public class UI_Popup : UI_Base
     public virtual void ClosePopupUI()
     {
         Managers.UI.ClosePopupUI(this);
-        Time.timeScale = 1.0f;
     }
 
     public virtual void HidePopupUI()

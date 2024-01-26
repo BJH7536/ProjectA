@@ -59,7 +59,7 @@ public class Player : MonoBehaviour
         _playerInputActions.PlayerAction.Interact.performed += InteractPerformed;
         _playerInputActions.PlayerAction.Interact.canceled += InteractCanceled;
         _playerInputActions.PlayerAction.WeaponExchange.performed += OnChange;
-        _playerInputActions.PlayerAction.Escape.started += Pause;
+        _playerInputActions.PlayerAction.Escape.started += PauseOrResume;
         _playerInputActions.Enable();
         #endregion
     }
@@ -78,7 +78,7 @@ public class Player : MonoBehaviour
         _playerInputActions.PlayerAction.Interact.performed -= InteractPerformed;
         _playerInputActions.PlayerAction.Interact.canceled -= InteractCanceled;
         _playerInputActions.PlayerAction.WeaponExchange.performed -= OnChange;
-        _playerInputActions.PlayerAction.Escape.started -= Pause;
+        _playerInputActions.PlayerAction.Escape.started -= PauseOrResume;
         _playerInputActions.Disable();
         #endregion
     }
@@ -165,10 +165,18 @@ public class Player : MonoBehaviour
     
     #region Pause
 
-    void Pause(InputAction.CallbackContext context)
+    void PauseOrResume(InputAction.CallbackContext context)
     {
-        Managers.UI.ShowPopupUI<UI_PausePopup>();
+        if (Managers.UI.FindPopup<UI_PausePopup>() == null)
+        {
+            Managers.UI.ShowPopupUI<UI_PausePopup>();
+        }
+        else
+        {
+            Managers.UI.Clear();
+            Time.timeScale = 1.0f;
+        }
+        
     }
-    
     #endregion
 }

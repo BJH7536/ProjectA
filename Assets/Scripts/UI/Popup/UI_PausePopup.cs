@@ -32,6 +32,12 @@ public class UI_PausePopup : UI_Popup
         return true;
     }
 
+    public override void ClosePopupUI()
+    {
+        Managers.UI.ClosePopupUI(this);
+        Time.timeScale = 1.0f;
+    }
+    
     void BacktoMainMenu()
     {
         Managers.Data.SaveData();
