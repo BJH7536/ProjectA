@@ -1,3 +1,6 @@
+using System;
+using UnityEngine;
+
 public class UI_MainMenu : UI_Scene
 {
     enum Buttons
