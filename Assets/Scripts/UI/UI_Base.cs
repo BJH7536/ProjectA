@@ -47,6 +47,9 @@ public abstract class UI_Base : MonoBehaviour
     protected void BindImage(Type type) { Bind<Image>(type); }
     protected void BindText(Type type) { Bind<TextMeshProUGUI>(type); }
     protected void BindButton(Type type) { Bind<Button>(type); }
+    protected void BindDropdown(Type type) { Bind<TMP_Dropdown>(type); }
+    protected void BindToggle(Type type) { Bind<Toggle>(type); }
+
 
     protected T Get<T>(int idx) where T : UnityEngine.Object
     {
@@ -61,6 +64,9 @@ public abstract class UI_Base : MonoBehaviour
     protected TextMeshProUGUI GetText(int idx) { return Get<TextMeshProUGUI>(idx); }
     protected Button GetButton(int idx) { return Get<Button>(idx); }
     protected Image GetImage(int idx) { return Get<Image>(idx); }
+    protected TMP_Dropdown GetDropdown(int idx) { return Get<TMP_Dropdown>(idx); }
+    protected Toggle GetToggle(int idx) { return Get<Toggle>(idx); }
+
 
     public static void BindEvent(GameObject go, Action action, Define.UIEvent type = Define.UIEvent.Click)
     {
