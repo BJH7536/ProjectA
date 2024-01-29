@@ -173,7 +173,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            Managers.UI.Clear();
+            Managers.UI.CloseAllPopupUI();
             Time.timeScale = 1.0f;
         }
         
