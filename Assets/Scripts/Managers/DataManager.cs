@@ -29,24 +29,27 @@ public class DataManager
     public void SaveData()
     {
         if (Managers.Scene.CurrentSceneType != Define.Scene.InGameScene) return;
-        // 현재 플레이어의 위치를 가져와서
-        _nowPlayer.pos = GameObject.Find("Player").transform.position;
         
-        // Json으로 만들어서
-        string playData = JsonUtility.ToJson(_nowPlayer);
-        
-        // 로컬 데이터로 변환한다
-        File.WriteAllText(_path + _fileName, playData);
-        
+        _nowPlayer.pos = GameObject.Find("Player").transform.position;  // 현재 플레이어의 위치를 가져와서
+        string playData = JsonUtility.ToJson(_nowPlayer);               // Json으로 만들어서
+        File.WriteAllText(_path + _fileName, playData);     // 로컬 데이터로 변환한다
     }
 
     public void LoadData()
     {
-        // 저장된 파일로부터 (아마 있을것으로 가정)
-        _nowPlayer = JsonUtility.FromJson<PlayerData>(File.ReadAllText(_path + _fileName));
+        // 정해진 경로에서 데이터를 읽어온다, 없으면 새로 만들어서
+        try
+        {
+            _nowPlayer = JsonUtility.FromJson<PlayerData>(File.ReadAllText(_path + _fileName));
+        }
+        catch (FileNotFoundException e)
+        {
+            Debug.Log(e);
+            Debug.Log("There is no Saved Data! so, This is new Game!");
+            _nowPlayer = new PlayerData(){ pos = new Vector3(0,0,0) };
+        }
         
         // 이를 Scene의 Player에게 적용
         GameObject.Find("Player").transform.position = _nowPlayer.pos;
     }
-    
 }
