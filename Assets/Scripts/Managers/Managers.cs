@@ -15,6 +15,7 @@ public class Managers : MonoBehaviour
     private ResourceManager _resource = new ResourceManager();
     private SceneManagerEx _scene = new SceneManagerEx();
     private GameManagerEx _game = new GameManagerEx();
+    private DialogueManager _dialogue = new DialogueManager();
     
     public static CutSceneManager CutScene => Instance._cutScene;
     public static ScriptManager Script => Instance._script;
@@ -24,6 +25,7 @@ public class Managers : MonoBehaviour
     public static ResourceManager Resource => Instance._resource;
     public static SceneManagerEx Scene => Instance._scene;
     public static GameManagerEx Game => Instance._game;
+    public static DialogueManager Dialogue => Instance._dialogue;
 
     void Awake()
     {
@@ -34,12 +36,14 @@ public class Managers : MonoBehaviour
     {
         // Instance가 null일 때만 Managers를 찾아 Instance에 할당
         if (_instance != null) return;
+
         
         GameObject go = GameObject.Find("@Managers");
         if (go == null)
         {
             go = new GameObject{name = "@Managers"};
             go.AddComponent<Managers>();
+
         }
         
         DontDestroyOnLoad(go);

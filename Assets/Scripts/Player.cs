@@ -23,12 +23,23 @@ public class Player : MonoBehaviour
     [Tab("NPC Interaction")]
     [SerializeField] public GameObject NPC;
     [SerializeField] private bool isNPCAvailable = false;
+    private bool interactPressed = false;
+
+    private static Player instance;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         
         _playerInputActions = new PlayerInputActions();
+
+        instance = this;
+    }
+
+    public static Player GetInstance()
+    {
+        return instance;
     }
 
     private void OnChange(InputAction.CallbackContext context)
@@ -55,9 +66,7 @@ public class Player : MonoBehaviour
         _playerInputActions.PlayerAction.Jump.started += JumpStarted;
         _playerInputActions.PlayerAction.Jump.performed += JumpPerformed;
         _playerInputActions.PlayerAction.Jump.canceled += JumpCanceled;
-        _playerInputActions.PlayerAction.Interact.started += InteractStarted;
         _playerInputActions.PlayerAction.Interact.performed += InteractPerformed;
-        _playerInputActions.PlayerAction.Interact.canceled += InteractCanceled;
         _playerInputActions.PlayerAction.WeaponExchange.performed += OnChange;
         _playerInputActions.PlayerAction.Escape.started += PauseOrResume;
         _playerInputActions.Enable();
@@ -74,9 +83,7 @@ public class Player : MonoBehaviour
         _playerInputActions.PlayerAction.Jump.started -= JumpStarted;
         _playerInputActions.PlayerAction.Jump.performed -= JumpPerformed;
         _playerInputActions.PlayerAction.Jump.canceled -= JumpCanceled;
-        _playerInputActions.PlayerAction.Interact.started -= InteractStarted;
         _playerInputActions.PlayerAction.Interact.performed -= InteractPerformed;
-        _playerInputActions.PlayerAction.Interact.canceled -= InteractCanceled;
         _playerInputActions.PlayerAction.WeaponExchange.performed -= OnChange;
         _playerInputActions.PlayerAction.Escape.started -= PauseOrResume;
         _playerInputActions.Disable();
@@ -115,7 +122,7 @@ public class Player : MonoBehaviour
     void MovePerformed(InputAction.CallbackContext context)
     {
         Debug.Log($"MovePerformed {context}");
-        InputVector = context.ReadValue<Vector2>();
+        InputVector = DialogueManager.GetInstance().dialogueIsPlaying ? Vector2.zero : context.ReadValue<Vector2>();
         
         if (InputVector.x == 0) sr.flipX = sr.flipX;
         else if (InputVector.x < 0) sr.flipX = true;
@@ -135,7 +142,7 @@ public class Player : MonoBehaviour
     void JumpStarted(InputAction.CallbackContext context)
     {
         Debug.Log($"JumpStarted {context}");
-        rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+        rb.AddForce(DialogueManager.GetInstance().dialogueIsPlaying ? Vector2.zero : Vector2.up * jumpPower, ForceMode2D.Impulse);
     }
     void JumpPerformed(InputAction.CallbackContext context)
     {
@@ -149,20 +156,27 @@ public class Player : MonoBehaviour
     #endregion
 
     #region Interact
-    void InteractStarted(InputAction.CallbackContext context)
-    {
-        Debug.Log($"InteractStarted {context}");
-    }
+   
     void InteractPerformed(InputAction.CallbackContext context)
     {
-        Debug.Log($"InteractPerformed {context}");
+        if (context.performed)
+        {
+            interactPressed = true;
+        }
+        else if (context.canceled)
+        {
+            interactPressed = false;
+        } 
     }
-    void InteractCanceled(InputAction.CallbackContext context)
+
+    public bool GetInteractPressed()
     {
-        Debug.Log($"InteractCanceled {context}");
+        bool result = interactPressed;
+        interactPressed = false;
+        return result;
     }
     #endregion
-    
+
     #region Pause
 
     void PauseOrResume(InputAction.CallbackContext context)
