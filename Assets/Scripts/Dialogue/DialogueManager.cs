@@ -11,6 +11,9 @@ public class DialogueManager : MonoBehaviour
     [Header("Dialogue UI")]
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private TextMeshProUGUI dialogueText;
+    [SerializeField] private TextMeshProUGUI displayNameText;
+    [SerializeField] private Animator portraitAnimator;
+    private Animator layoutAnimator;
 
     [Header("Choices UI")]
     [SerializeField] private GameObject[] choices;
@@ -21,6 +24,10 @@ public class DialogueManager : MonoBehaviour
     public bool dialogueIsPlaying { get; private set; }
     
     public static DialogueManager instance;
+
+    private const string SPEAKER_TAG = "speaker";
+    private const string PORTRAIT_TAG = "portrait";
+    private const string LAYOUT_TAG = "layout";
 
     private void Awake()
     {
@@ -41,7 +48,9 @@ public class DialogueManager : MonoBehaviour
         dialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
 
-        choicesText=new TextMeshProUGUI[choices.Length];
+        layoutAnimator=dialoguePanel.GetComponent<Animator>();
+
+        choicesText =new TextMeshProUGUI[choices.Length];
         int index = 0;
         foreach (GameObject choice in choices)
         {
@@ -69,6 +78,11 @@ public class DialogueManager : MonoBehaviour
         dialogueIsPlaying = true;
         dialoguePanel.SetActive(true);
 
+        //태그 초기화
+        displayNameText.text = "???";
+        portraitAnimator.Play("default");
+        layoutAnimator.Play("right");
+
         ContinueStory();
     }
 
@@ -81,14 +95,47 @@ public class DialogueManager : MonoBehaviour
 
     private void ContinueStory()
     {
-        if (currentStory.canContinue)
+        if (currentStory.canContinue)                   //더 보여줄 이야기가 있다면
         {
-            dialogueText.text = currentStory.Continue();
-            DisplayChoices();
+            dialogueText.text = currentStory.Continue();            //한줄 출력
+            DisplayChoices();                                       //선택이 있으면 선택출력
+            //태그관리
+            HandleTags(currentStory.currentTags);
         }
         else
         {
             ExitDialogueMode();
+        }
+    }
+
+    private void HandleTags(List<string> currentTags)
+    {
+        foreach (string tag in currentTags)
+        {
+            string[] splitTag=tag.Split(':');
+            if (splitTag.Length != 2)
+            {
+                Debug.LogError("Tag parsed error : " + tag);
+            }
+            string tagkey = splitTag[0].Trim();
+            string tagvalue = splitTag[1].Trim();
+
+            switch(tagkey)
+            {
+                case SPEAKER_TAG:
+                    displayNameText.text = tagvalue;
+                    break;
+                case PORTRAIT_TAG:
+                    portraitAnimator.Play(tagvalue);
+                    break;
+                case LAYOUT_TAG: 
+                    layoutAnimator.Play(tagvalue);
+                    break;
+                default:
+                    Debug.LogWarning("Tag exists but not handled");
+                    break;
+            }
+
         }
     }
 
@@ -128,4 +175,4 @@ public class DialogueManager : MonoBehaviour
     {
         currentStory.ChooseChoiceIndex(choiceIndex);
     }
-}
+} 
