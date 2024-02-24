@@ -6,8 +6,6 @@
         ->chosen("사과")
     +[배]
         ->chosen("배")
-    +[감]
-        ->chosen("감")
 === chosen(fruit) ===
 너는 {fruit} 를 골랐어!
 -> END

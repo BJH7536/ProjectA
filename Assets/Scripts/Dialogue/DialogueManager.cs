@@ -3,8 +3,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -18,8 +20,10 @@ public class DialogueManager : MonoBehaviour
     [Header("Choices UI")]
     [SerializeField] private GameObject[] choices;
     private TextMeshProUGUI[] choicesText;
+    private Button[] choiceButton;
     
     private Story currentStory;
+    private int num = 3;
 
     public bool dialogueIsPlaying { get; private set; }
     
@@ -29,6 +33,11 @@ public class DialogueManager : MonoBehaviour
     private const string PORTRAIT_TAG = "portrait";
     private const string LAYOUT_TAG = "layout";
 
+    //public void Set()           //버튼 및 패널 붙이기
+    //{
+        
+    //}
+
     private void Awake()
     {
         if (instance != null)
@@ -36,6 +45,17 @@ public class DialogueManager : MonoBehaviour
             Debug.LogWarning("Found more than one Dialogue Manager");
         }
         instance = this;
+        dialoguePanel = GameObject.Find("Canvas/DialoguePanel");
+        dialogueText = GameObject.Find("Canvas/DialoguePanel/DialogueText").transform.GetComponent<TextMeshProUGUI>();
+        displayNameText = GameObject.Find("Canvas/DialoguePanel/SpeakerFrame/DisplayNameText").transform.GetComponent<TextMeshProUGUI>();
+        portraitAnimator = GameObject.Find("Canvas/DialoguePanel/PortraitFrame/PortraitImage").transform.GetComponent<Animator>();
+        choices = new GameObject[3] { GameObject.Find("Canvas/DialoguePanel/DialogueChoices/Choice0"), GameObject.Find("Canvas/DialoguePanel/DialogueChoices/Choice1"), GameObject.Find("Canvas/DialoguePanel/DialogueChoices/Choice2") };
+        choicesText = new TextMeshProUGUI[3];
+        for (int i = 0; i < choices.Length; i++)
+        {
+            choicesText[i] = GameObject.Find("Canvas/DialoguePanel/DialogueChoices/Choice" + i + "/Text (TMP)").transform.GetComponent<TextMeshProUGUI>();
+        }
+        choiceButton = new Button[3] { GameObject.Find("Canvas/DialoguePanel/DialogueChoices/Choice0").transform.GetComponent<Button>(), GameObject.Find("Canvas/DialoguePanel/DialogueChoices/Choice1").transform.GetComponent<Button>(), GameObject.Find("Canvas/DialoguePanel/DialogueChoices/Choice2").transform.GetComponent<Button>() };
     }
 
     public static DialogueManager GetInstance()

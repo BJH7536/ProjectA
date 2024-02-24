@@ -156,12 +156,13 @@ public class Player : MonoBehaviour
     #endregion
 
     #region Interact
-   
+    public event Action onInteractPressed;
     void InteractPerformed(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
             interactPressed = true;
+            //onInteractPressed();
         }
         else if (context.canceled)
         {

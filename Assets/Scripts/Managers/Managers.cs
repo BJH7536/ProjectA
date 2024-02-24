@@ -16,7 +16,10 @@ public class Managers : MonoBehaviour
     private SceneManagerEx _scene = new SceneManagerEx();
     private GameManagerEx _game = new GameManagerEx();
     private DialogueManager _dialogue = new DialogueManager();
-    
+    private QuestManager _quest = new QuestManager();
+    private QuestEvents _questevent = new QuestEvents();
+    private Player _player = new Player();
+
     public static CutSceneManager CutScene => Instance._cutScene;
     public static ScriptManager Script => Instance._script;
     public static SoundManager Sound => Instance._sound;
@@ -26,6 +29,9 @@ public class Managers : MonoBehaviour
     public static SceneManagerEx Scene => Instance._scene;
     public static GameManagerEx Game => Instance._game;
     public static DialogueManager Dialogue => Instance._dialogue;
+    public static QuestManager Quest => Instance._quest;
+    public static QuestEvents Questevent => Instance._questevent;
+    public static Player Player => Instance._player;
 
     void Awake()
     {
@@ -45,11 +51,22 @@ public class Managers : MonoBehaviour
             go.AddComponent<Managers>();
 
         }
-        
+
+        GameObject go2 = GameObject.Find("DialogueManager");
+        if (go2 == null)
+        {
+            go2 = new GameObject { name = "DialogueManager" };
+            go2.AddComponent<DialogueManager>();
+
+        }
+
+
         DontDestroyOnLoad(go);
-        _instance = go.GetComponent<Managers>();
-        
+        _instance = go.GetComponent<Managers>();     
+
+
         _instance._data.Init();
+        //_instance._dialogue.Set();
     }
 
     private void OnApplicationQuit()
