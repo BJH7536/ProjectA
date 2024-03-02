@@ -19,6 +19,7 @@ public class Managers : MonoBehaviour
     private QuestManager _quest = new QuestManager();
     private QuestEvents _questevent = new QuestEvents();
     private Player _player = new Player();
+    private UI_DialoguePopup _popup = new UI_DialoguePopup();
 
     public static CutSceneManager CutScene => Instance._cutScene;
     public static ScriptManager Script => Instance._script;
@@ -28,10 +29,11 @@ public class Managers : MonoBehaviour
     public static ResourceManager Resource => Instance._resource;
     public static SceneManagerEx Scene => Instance._scene;
     public static GameManagerEx Game => Instance._game;
-    public static DialogueManager Dialogue => Instance._dialogue;
+    public  DialogueManager Dialogue => Instance._dialogue;
     public static QuestManager Quest => Instance._quest;
     public static QuestEvents Questevent => Instance._questevent;
     public static Player Player => Instance._player;
+    public static UI_DialoguePopup Popup => Instance._popup;
 
     void Awake()
     {

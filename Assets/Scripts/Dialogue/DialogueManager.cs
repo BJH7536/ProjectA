@@ -11,32 +11,34 @@ using UnityEngine.UI;
 public class DialogueManager : MonoBehaviour
 {
     [Header("Dialogue UI")]
-    [SerializeField] private GameObject dialoguePanel;
-    [SerializeField] private TextMeshProUGUI dialogueText;
-    [SerializeField] private TextMeshProUGUI displayNameText;
-    [SerializeField] private Animator portraitAnimator;
-    private Animator layoutAnimator;
+    [SerializeField] private GameObject dialoguePanel;              //밑바탕
+    [SerializeField] private TextMeshProUGUI dialogueText;          //대화창
+    [SerializeField] private TextMeshProUGUI displayNameText;       //NPC이름
+    [SerializeField] private Animator portraitAnimator;             //NPC초상화
+    private Animator layoutAnimator;                                //레이아웃
 
     [Header("Choices UI")]
-    [SerializeField] private GameObject[] choices;
-    private TextMeshProUGUI[] choicesText;
-    private Button[] choiceButton;
+    [SerializeField] private GameObject[] choices;                  //선택지버튼
+    private TextMeshProUGUI[] choicesText;                          //선택지 텍스트
+    private Button[] choiceButton;                                  //선택지 버튼
     
-    private Story currentStory;
-    private int num = 3;
+    private Story currentStory;                                     //Ink 로 생성된 텍스트를 받아올 Class변수
+   
 
-    public bool dialogueIsPlaying { get; private set; }
+    public bool dialogueIsPlaying { get; private set; }             //현재 대화창에 진입했는지 확인할 변수
     
     public static DialogueManager instance;
 
-    private const string SPEAKER_TAG = "speaker";
+    private const string SPEAKER_TAG = "speaker";                   //테그값들 테그값 : 변수
     private const string PORTRAIT_TAG = "portrait";
     private const string LAYOUT_TAG = "layout";
 
-    //public void Set()           //버튼 및 패널 붙이기
-    //{
-        
-    //}
+    private UI_DialoguePopup popup;
+
+    public string npcId;
+    [Header("Qeust state")]
+    [SerializeField] public bool start;
+    [SerializeField] public bool end;
 
     private void Awake()
     {
@@ -44,18 +46,10 @@ public class DialogueManager : MonoBehaviour
         {
             Debug.LogWarning("Found more than one Dialogue Manager");
         }
-        instance = this;
-        dialoguePanel = GameObject.Find("Canvas/DialoguePanel");
-        dialogueText = GameObject.Find("Canvas/DialoguePanel/DialogueText").transform.GetComponent<TextMeshProUGUI>();
-        displayNameText = GameObject.Find("Canvas/DialoguePanel/SpeakerFrame/DisplayNameText").transform.GetComponent<TextMeshProUGUI>();
-        portraitAnimator = GameObject.Find("Canvas/DialoguePanel/PortraitFrame/PortraitImage").transform.GetComponent<Animator>();
-        choices = new GameObject[3] { GameObject.Find("Canvas/DialoguePanel/DialogueChoices/Choice0"), GameObject.Find("Canvas/DialoguePanel/DialogueChoices/Choice1"), GameObject.Find("Canvas/DialoguePanel/DialogueChoices/Choice2") };
-        choicesText = new TextMeshProUGUI[3];
-        for (int i = 0; i < choices.Length; i++)
-        {
-            choicesText[i] = GameObject.Find("Canvas/DialoguePanel/DialogueChoices/Choice" + i + "/Text (TMP)").transform.GetComponent<TextMeshProUGUI>();
-        }
-        choiceButton = new Button[3] { GameObject.Find("Canvas/DialoguePanel/DialogueChoices/Choice0").transform.GetComponent<Button>(), GameObject.Find("Canvas/DialoguePanel/DialogueChoices/Choice1").transform.GetComponent<Button>(), GameObject.Find("Canvas/DialoguePanel/DialogueChoices/Choice2").transform.GetComponent<Button>() };
+        popup = GameObject.Find("UI_DialoguePopup").GetComponent<UI_DialoguePopup>();
+        instance= this;
+        start = true; 
+        end=false;
     }
 
     public static DialogueManager GetInstance()
@@ -65,6 +59,20 @@ public class DialogueManager : MonoBehaviour
 
     private void Start()
     {
+       
+        dialoguePanel = popup.dialoguePanel;
+        dialogueText = popup.dialogueText;
+        displayNameText = popup.displayNameText;
+        portraitAnimator = popup.portraitAnimator;
+        choices = popup.choices;
+        choiceButton = popup.choiceButton;
+        choicesText = popup.choicesText;
+        
+        for (int i = 0; i < choices.Length; i++)
+        {
+            int id = i;
+            choiceButton[i].onClick.AddListener(() => MakeChoice(id,npcId));
+        }
         dialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
 
@@ -163,7 +171,7 @@ public class DialogueManager : MonoBehaviour
     {
         List<Choice> currentChoices = currentStory.currentChoices;
 
-        if(currentChoices.Count > choices.Length)
+        if(currentChoices.Count > choices.Length)           //현재 선택지의 개수가 버튼의 개수보다 많으면 오류 
         {
             Debug.LogError("More choices than ever");
         }
@@ -191,8 +199,17 @@ public class DialogueManager : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(choices[0].gameObject);
     }
 
-    public void MakeChoice(int choiceIndex)
+    public void MakeChoice(int choiceIndex,string npcId)
     {
         currentStory.ChooseChoiceIndex(choiceIndex);
+        Debug.Log(npcId);
+        if (choiceIndex == 0 && npcId.Contains("Quest")&&start)
+        {
+            //NPC id 와 Quest ID를 일치시켜야함
+            Managers.Questevent.StartQuest(npcId);
+        }else if(choiceIndex == 0 && npcId.Contains("Quest") && end)
+        {
+            Managers.Questevent.FinishQuest(npcId);
+        }
     }
 } 

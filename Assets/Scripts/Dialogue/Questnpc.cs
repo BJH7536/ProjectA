@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class DialogueTrigger : MonoBehaviour
+public class Questnpc : MonoBehaviour
 {
     [Header("Visual Cue")]
     [SerializeField] private GameObject visualCue;
@@ -21,16 +20,16 @@ public class DialogueTrigger : MonoBehaviour
     {
         playerInRange = false;
         visualCue.SetActive(false);
-        npcId = gameObject.name;
+        npcId = "Qeust"+gameObject.name;
     }
 
     private void Update()
     {
-        
+
         if (playerInRange && !DialogueManager.GetInstance().dialogueIsPlaying)
         {
             visualCue.SetActive(true);
-            if(Player.GetInstance().GetInteractPressed())
+            if (Player.GetInstance().GetInteractPressed())
             {
                 DialogueManager.GetInstance().EnterDialogueMode(inkJSON);
                 DialogueManager.GetInstance().npcId = npcId;
@@ -44,9 +43,9 @@ public class DialogueTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.gameObject.tag == "Player") 
+        if (collider.gameObject.tag == "Player")
         {
-            playerInRange=true;
+            playerInRange = true;
         }
     }
 
@@ -54,7 +53,7 @@ public class DialogueTrigger : MonoBehaviour
     {
         if (collider.gameObject.tag == "Player")
         {
-            playerInRange=false;
+            playerInRange = false;
         }
     }
 }

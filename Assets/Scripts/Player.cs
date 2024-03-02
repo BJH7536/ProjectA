@@ -35,7 +35,10 @@ public class Player : MonoBehaviour
         _playerInputActions = new PlayerInputActions();
 
         instance = this;
+        
     }
+
+
 
     public static Player GetInstance()
     {
@@ -101,13 +104,13 @@ public class Player : MonoBehaviour
         if(hit.collider != null)
         {
             isNPCAvailable = true;
-            Debug.Log("NPC Available : " + isNPCAvailable);
+            //Debug.Log("NPC Available : " + isNPCAvailable);
             NPC = GameObject.Find("NPC");     
         }
         if (isNPCAvailable && Vector2.Distance(transform.position, NPC.transform.position) > 3)
         {
             isNPCAvailable = false;
-            Debug.Log("NPC Available : " + isNPCAvailable);
+            //Debug.Log("NPC Available : " + isNPCAvailable);
             NPC = GameObject.Find("NULLNPC");
         }
 
@@ -117,11 +120,11 @@ public class Player : MonoBehaviour
 
     void MoveStarted(InputAction.CallbackContext context)
     {
-        Debug.Log($"MoveStarted {context}");
+        //Debug.Log($"MoveStarted {context}");
     }
     void MovePerformed(InputAction.CallbackContext context)
     {
-        Debug.Log($"MovePerformed {context}");
+        //Debug.Log($"MovePerformed {context}");
         InputVector = DialogueManager.GetInstance().dialogueIsPlaying ? Vector2.zero : context.ReadValue<Vector2>();
         
         if (InputVector.x == 0) sr.flipX = sr.flipX;
@@ -130,7 +133,7 @@ public class Player : MonoBehaviour
     }
     void MoveCanCeled(InputAction.CallbackContext context)
     {
-        Debug.Log($"MoveCanceled {context}");
+        //Debug.Log($"MoveCanceled {context}");
         InputVector = Vector2.zero;
         rb.velocity = new Vector2(0, rb.velocity.y);
     }
@@ -141,16 +144,16 @@ public class Player : MonoBehaviour
     
     void JumpStarted(InputAction.CallbackContext context)
     {
-        Debug.Log($"JumpStarted {context}");
+        //Debug.Log($"JumpStarted {context}");
         rb.AddForce(DialogueManager.GetInstance().dialogueIsPlaying ? Vector2.zero : Vector2.up * jumpPower, ForceMode2D.Impulse);
     }
     void JumpPerformed(InputAction.CallbackContext context)
     {
-        Debug.Log($"JumpPerformed {context}");
+        //Debug.Log($"JumpPerformed {context}");
     }
     void JumpCanceled(InputAction.CallbackContext context)
     {
-        Debug.Log($"JumpCanceled {context}");
+        //Debug.Log($"JumpCanceled {context}");
     }
 
     #endregion
