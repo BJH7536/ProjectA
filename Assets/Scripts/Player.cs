@@ -35,7 +35,7 @@ public class Player : MonoBehaviour
         _playerInputActions = new PlayerInputActions();
 
         instance = this;
-        
+        NPC = GameObject.Find("NULLNPC");
     }
 
 
@@ -105,7 +105,7 @@ public class Player : MonoBehaviour
         {
             isNPCAvailable = true;
             //Debug.Log("NPC Available : " + isNPCAvailable);
-            NPC = GameObject.Find("NPC");     
+            NPC = hit.collider.gameObject;
         }
         if (isNPCAvailable && Vector2.Distance(transform.position, NPC.transform.position) > 3)
         {
@@ -165,7 +165,7 @@ public class Player : MonoBehaviour
         if (context.performed)
         {
             interactPressed = true;
-            //onInteractPressed();
+            onInteractPressed();
         }
         else if (context.canceled)
         {

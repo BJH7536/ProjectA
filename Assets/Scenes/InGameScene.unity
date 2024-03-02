@@ -2674,7 +2674,23 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2658469230373732653, guid: 5f49bc6dd3d504b4ba06348989f3d04d, type: 3}
       propertyPath: m_Name
-      value: NPC
+      value: Collect the Coins!
+      objectReference: {fileID: 0}
+    - target: {fileID: 2658469230373732653, guid: 5f49bc6dd3d504b4ba06348989f3d04d, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 3220560041892770841, guid: 5f49bc6dd3d504b4ba06348989f3d04d, type: 3}
+      propertyPath: m_Color.b
+      value: 0.2823529
+      objectReference: {fileID: 0}
+    - target: {fileID: 3220560041892770841, guid: 5f49bc6dd3d504b4ba06348989f3d04d, type: 3}
+      propertyPath: m_Color.g
+      value: 0.8739928
+      objectReference: {fileID: 0}
+    - target: {fileID: 3220560041892770841, guid: 5f49bc6dd3d504b4ba06348989f3d04d, type: 3}
+      propertyPath: m_Color.r
+      value: 0.9137255
       objectReference: {fileID: 0}
     - target: {fileID: 8175303610426114463, guid: 5f49bc6dd3d504b4ba06348989f3d04d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2716,6 +2732,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8553003120145340662, guid: 5f49bc6dd3d504b4ba06348989f3d04d, type: 3}
+      propertyPath: inkJSON
+      value: 
+      objectReference: {fileID: 4900000, guid: a11efdd3e4d8f9d4a8b3e0aa5b45d014, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
