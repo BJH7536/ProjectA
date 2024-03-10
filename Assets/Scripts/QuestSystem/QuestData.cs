@@ -2,17 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class QuestData
+public abstract class QuestData 
 {
-    public QuestState state;
-    public int questStepIndex;
-    public QuestStepState[] questStepStates;
+    [Header("Quest Info")]
+    public string questName;
+    public int[] npcId;     //퀘스트를 가지고있는 npcId\
+    public int Indexrequirment;
+    public QuestState qs;
 
-    public QuestData(QuestState state, int questStepIndex, QuestStepState[] questStepStates)
+    [Header("Reward Info")]
+    public int goldReward;
+
+    public enum QuestState
     {
-        this.state = state;
-        this.questStepIndex = questStepIndex;
-        this.questStepStates = questStepStates;
+        REQUIREMENTS_NOT_MET,
+        CAN_START,
+        IN_PROGRESS,
+        FINISHED
     }
+
+    public QuestData(string name, int[] npc,int Index,QuestState qs,int gold)
+    {
+        questName = name;
+        npcId = npc;
+        Indexrequirment=Index;
+        qs = QuestState.REQUIREMENTS_NOT_MET;
+        goldReward = gold;
+    }
+
+  
 }

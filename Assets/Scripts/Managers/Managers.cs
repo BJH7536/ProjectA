@@ -15,9 +15,6 @@ public class Managers : MonoBehaviour
     private ResourceManager _resource = new ResourceManager();
     private SceneManagerEx _scene = new SceneManagerEx();
     private GameManagerEx _game = new GameManagerEx();
-    private DialogueManager _dialogue = new DialogueManager();
-    private QuestManager _quest = new QuestManager();
-    private QuestEvents _questevent = new QuestEvents();
     private Player _player = new Player();
     private UI_DialoguePopup _popup = new UI_DialoguePopup();
 
@@ -29,9 +26,6 @@ public class Managers : MonoBehaviour
     public static ResourceManager Resource => Instance._resource;
     public static SceneManagerEx Scene => Instance._scene;
     public static GameManagerEx Game => Instance._game;
-    public  DialogueManager Dialogue => Instance._dialogue;
-    public static QuestManager Quest => Instance._quest;
-    public static QuestEvents Questevent => Instance._questevent;
     public static Player Player => Instance._player;
     public static UI_DialoguePopup Popup => Instance._popup;
 
@@ -51,14 +45,6 @@ public class Managers : MonoBehaviour
         {
             go = new GameObject{name = "@Managers"};
             go.AddComponent<Managers>();
-
-        }
-
-        GameObject go2 = GameObject.Find("DialogueManager");
-        if (go2 == null)
-        {
-            go2 = new GameObject { name = "DialogueManager" };
-            go2.AddComponent<DialogueManager>();
 
         }
 

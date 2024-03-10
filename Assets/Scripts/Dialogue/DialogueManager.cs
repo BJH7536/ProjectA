@@ -1,215 +1,66 @@
-using Ink.Runtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class DialogueManager : MonoBehaviour
 {
-    [Header("Dialogue UI")]
-    [SerializeField] private GameObject dialoguePanel;              //밑바탕
-    [SerializeField] private TextMeshProUGUI dialogueText;          //대화창
-    [SerializeField] private TextMeshProUGUI displayNameText;       //NPC이름
-    [SerializeField] private Animator portraitAnimator;             //NPC초상화
-    private Animator layoutAnimator;                                //레이아웃
+    Dictionary<int, string[]> talkData;
+    Dictionary<int,int> portraitData;
+    Dictionary<int, string[]> ChoiceData;
+    //퀘스트 진행상황은 퀘스트 메니저에서 관리
 
-    [Header("Choices UI")]
-    [SerializeField] private GameObject[] choices;                  //선택지버튼
-    private TextMeshProUGUI[] choicesText;                          //선택지 텍스트
-    private Button[] choiceButton;                                  //선택지 버튼
-    
-    private Story currentStory;                                     //Ink 로 생성된 텍스트를 받아올 Class변수
-   
-
-    public bool dialogueIsPlaying { get; private set; }             //현재 대화창에 진입했는지 확인할 변수
-    
-    public static DialogueManager instance;
-
-    private const string SPEAKER_TAG = "speaker";                   //테그값들 테그값 : 변수
-    private const string PORTRAIT_TAG = "portrait";
-    private const string LAYOUT_TAG = "layout";
-
-    private UI_DialoguePopup popup;
-
-    public string npcId;
-    [Header("Qeust state")]
-    [SerializeField] public bool start;
-    [SerializeField] public bool end;
 
     private void Awake()
     {
-        if (instance != null)
-        {
-            Debug.LogWarning("Found more than one Dialogue Manager");
-        }
-        popup = GameObject.Find("UI_DialoguePopup").GetComponent<UI_DialoguePopup>();
-        instance= this;
-        start = true; 
-        end=false;
+        talkData = new Dictionary<int, string[]>();
+        portraitData = new Dictionary<int, int>();
+        GenerateData();
     }
 
-    public static DialogueManager GetInstance()
+    void GenerateData()     //퀘스트번호+NPCId => 퀘스트용 대화 데이터 Id
     {
-        return instance;
+        //Basic Talk Data
+        talkData.Add(1000, new string[] { "안녕?:0", " 이 곳에는 어쩐일이야?:1" });
+
+        talkData.Add(2000, new string[] { "안녕?:0", " 너는 누구야?:1" });
+
+        //Quest Talk Data
+        talkData.Add(1000+10, new string[] { "어서와:0", " 오른쪽으로 가서 NPC를 만나봐!:1" });
+        talkData.Add(1000 + 11, new string[] { "어:0", "NPC는 만나고왔어?:1" });
+        talkData.Add(2000+11, new string[] { "안녕?:0", "무엇을 하러 여기까지 왔어?:1" });
+        portraitData.Add(1000 + 0, 0);
+        portraitData.Add(1000 + 1, 1);
+        portraitData.Add (1000 + 2, 2);
+
+        portraitData.Add(2000 + 0, 0);
+        portraitData.Add(2000 + 1, 1);
+        portraitData.Add(2000 + 2, 2);
     }
 
-    private void Start()
+    public string GetTalk(int id,int talkIndex)
     {
-       
-        dialoguePanel = popup.dialoguePanel;
-        dialogueText = popup.dialogueText;
-        displayNameText = popup.displayNameText;
-        portraitAnimator = popup.portraitAnimator;
-        choices = popup.choices;
-        choiceButton = popup.choiceButton;
-        choicesText = popup.choicesText;
-        
-        for (int i = 0; i < choices.Length; i++)
+        if (!talkData.ContainsKey(id))       //퀘스트 진행중의 대사
         {
-            int id = i;
-            choiceButton[i].onClick.AddListener(() => MakeChoice(id,npcId));
-        }
-        dialogueIsPlaying = false;
-        dialoguePanel.SetActive(false);
-
-        layoutAnimator=dialoguePanel.GetComponent<Animator>();
-
-        choicesText =new TextMeshProUGUI[choices.Length];
-        int index = 0;
-        foreach (GameObject choice in choices)
-        {
-            choicesText[index]=choice.GetComponentInChildren<TextMeshProUGUI>();
-            index++;
-        }
-    }
-
-    private void Update()
-    {
-        if (!dialogueIsPlaying)
-        {
-            return;
-        }
-
-        if(Player.GetInstance().GetInteractPressed())
-        {
-            ContinueStory();
-        }
-    }
-
-    public void EnterDialogueMode(TextAsset inkJSON)
-    {
-        currentStory = new Story(inkJSON.text);
-        dialogueIsPlaying = true;
-        dialoguePanel.SetActive(true);
-
-        //태그 초기화
-        displayNameText.text = "???";
-        portraitAnimator.Play("default");
-        layoutAnimator.Play("right");
-
-        ContinueStory();
-    }
-
-    private void ExitDialogueMode()
-    {
-        dialogueIsPlaying = false;
-        dialoguePanel.SetActive(false);
-        dialogueText.text = "";
-    }
-
-    private void ContinueStory()
-    {
-        if (currentStory.canContinue)                   //더 보여줄 이야기가 있다면
-        {
-            dialogueText.text = currentStory.Continue();            //한줄 출력
-            DisplayChoices();                                       //선택이 있으면 선택출력
-            //태그관리
-            HandleTags(currentStory.currentTags);
-        }
-        else
-        {
-            ExitDialogueMode();
-        }
-    }
-
-    private void HandleTags(List<string> currentTags)
-    {
-        foreach (string tag in currentTags)
-        {
-            string[] splitTag=tag.Split(':');
-            if (splitTag.Length != 2)
+            //퀘스트 대사없을 때는 기본 대사 가져오기
+            if (!talkData.ContainsKey(id - id % 10))
             {
-                Debug.LogError("Tag parsed error : " + tag);
+                return GetTalk(id - id % 100, talkIndex);
             }
-            string tagkey = splitTag[0].Trim();
-            string tagvalue = splitTag[1].Trim();
-
-            switch(tagkey)
+            else    //퀘스트 대사 가져오기
             {
-                case SPEAKER_TAG:
-                    displayNameText.text = tagvalue;
-                    break;
-                case PORTRAIT_TAG:
-                    portraitAnimator.Play(tagvalue);
-                    break;
-                case LAYOUT_TAG: 
-                    layoutAnimator.Play(tagvalue);
-                    break;
-                default:
-                    Debug.LogWarning("Tag exists but not handled");
-                    break;
+                return GetTalk(id - id % 10, talkIndex);
+
             }
-
         }
+        //기본 대사 가져오기 코드
+        if (talkIndex == talkData[id].Length) return null;
+        else return talkData[id][talkIndex];
     }
 
-    private void DisplayChoices()
+    public int GetPortraitIndex(int id,int portraitIndex)
     {
-        List<Choice> currentChoices = currentStory.currentChoices;
-
-        if(currentChoices.Count > choices.Length)           //현재 선택지의 개수가 버튼의 개수보다 많으면 오류 
-        {
-            Debug.LogError("More choices than ever");
-        }
-
-        int index = 0;
-        foreach(Choice choice in currentChoices)
-        {
-            choices[index].gameObject.SetActive(true);
-            choicesText[index].text = choice.text;
-            index++;
-        }
-
-        for(int i = index;i< choices.Length; i++)
-        {
-            choices[i].gameObject.SetActive(false);
-        }
-
-        StartCoroutine(SelectFirstChoice());
+        return portraitData[id + portraitIndex];
     }
 
-    private IEnumerator SelectFirstChoice()
-    {
-        EventSystem.current.SetSelectedGameObject(null);
-        yield return new WaitForEndOfFrame();
-        EventSystem.current.SetSelectedGameObject(choices[0].gameObject);
-    }
-
-    public void MakeChoice(int choiceIndex,string npcId)
-    {
-        currentStory.ChooseChoiceIndex(choiceIndex);
-        Debug.Log(npcId);
-        if (choiceIndex == 0 && npcId.Contains("Quest")&&start)
-        {
-            //NPC id 와 Quest ID를 일치시켜야함
-            Managers.Questevent.StartQuest(npcId);
-        }else if(choiceIndex == 0 && npcId.Contains("Quest") && end)
-        {
-            Managers.Questevent.FinishQuest(npcId);
-        }
-    }
-} 
+}

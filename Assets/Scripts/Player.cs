@@ -23,7 +23,13 @@ public class Player : MonoBehaviour
     [Tab("NPC Interaction")]
     [SerializeField] public GameObject NPC;
     [SerializeField] private bool isNPCAvailable = false;
+    [SerializeField] private bool isAction;
+    [SerializeField] private UI_DialoguePopup popup;
+    [SerializeField] private DialogueManager dialogueManager;
+    [SerializeField] public QuestManager questManager;
+    [SerializeField] private int QuestIndex;
     private bool interactPressed = false;
+    public int talkIndex;
 
     private static Player instance;
 
@@ -36,6 +42,7 @@ public class Player : MonoBehaviour
 
         instance = this;
         NPC = GameObject.Find("NULLNPC");
+        QuestIndex = 10;
     }
 
 
@@ -100,7 +107,7 @@ public class Player : MonoBehaviour
             rb.AddForce(InputVector * speed, ForceMode2D.Impulse);
 
         Debug.DrawRay(rb.position,Vector3.right,Color.red );
-        RaycastHit2D hit = Physics2D.Raycast(rb.position, Vector3.right, 1, LayerMask.GetMask("NPC"));
+        RaycastHit2D hit = Physics2D.Raycast(rb.position, Vector3.right, 1, LayerMask.GetMask("Object"));
         if(hit.collider != null)
         {
             isNPCAvailable = true;
@@ -125,7 +132,7 @@ public class Player : MonoBehaviour
     void MovePerformed(InputAction.CallbackContext context)
     {
         //Debug.Log($"MovePerformed {context}");
-        InputVector = DialogueManager.GetInstance().dialogueIsPlaying ? Vector2.zero : context.ReadValue<Vector2>();
+        InputVector = isAction ? Vector2.zero : context.ReadValue<Vector2>();
         
         if (InputVector.x == 0) sr.flipX = sr.flipX;
         else if (InputVector.x < 0) sr.flipX = true;
@@ -145,7 +152,7 @@ public class Player : MonoBehaviour
     void JumpStarted(InputAction.CallbackContext context)
     {
         //Debug.Log($"JumpStarted {context}");
-        rb.AddForce(DialogueManager.GetInstance().dialogueIsPlaying ? Vector2.zero : Vector2.up * jumpPower, ForceMode2D.Impulse);
+        rb.AddForce(isAction ? Vector2.zero : Vector2.up * jumpPower, ForceMode2D.Impulse);
     }
     void JumpPerformed(InputAction.CallbackContext context)
     {
@@ -159,26 +166,56 @@ public class Player : MonoBehaviour
     #endregion
 
     #region Interact
-    public event Action onInteractPressed;
     void InteractPerformed(InputAction.CallbackContext context)
     {
-        if (context.performed)
-        {
-            interactPressed = true;
-            onInteractPressed();
-        }
-        else if (context.canceled)
-        {
-            interactPressed = false;
-        } 
+        Action(NPC);
     }
 
-    public bool GetInteractPressed()
+    public void Action(GameObject scanfobj)
     {
-        bool result = interactPressed;
-        interactPressed = false;
-        return result;
+       
+        NpcData npcdata= NPC.GetComponent<NpcData>();
+        Talk(npcdata.npcId, npcdata.isNpc);
+        popup.dialoguePanel.SetActive(isAction);
     }
+
+    void Talk(int id,bool isNpc)
+    {
+        int questTalkIndex=questManager.GetQuestTalkIndex(id);
+        
+
+        string talkData= dialogueManager.GetTalk(id+ questTalkIndex, talkIndex);        //퀘스트번호+NPCId => 퀘스트용 대화 데이터 Id
+        if (talkData == null)
+        {
+            isAction = false;
+            talkIndex = 0;
+            questManager.AdvanceQuest(NPC.GetComponent<NpcData>().questId[0]);
+            //questManager.CheckRequirement(QuestIndex);
+            return;
+        }
+
+        if (isNpc)
+        {
+            popup.dialogueText.text = talkData.Split(':')[0];
+            popup.dialoguePanel.transform.GetChild(3).gameObject.SetActive(true);
+            popup.portraitImage.sprite=NPC.GetComponent<NpcData>().npcPortrait[dialogueManager.GetPortraitIndex(id, int.Parse(talkData.Split(':')[1]))];
+            
+            //popup.portraitAnimator.Play(dialogueManager.GetPortraitIndex(id, int.Parse(talkData.Split(':')[1].Trim())));
+
+            popup.displayNameText.text = NPC.name;
+        }
+        else
+        {
+            popup.dialogueText.text = talkData;
+            popup.dialoguePanel.transform.GetChild(3).gameObject.SetActive(false);
+            popup.displayNameText.text = NPC.name;
+        }
+
+        isAction = true;
+        talkIndex++;
+       
+    }
+
     #endregion
 
     #region Pause
@@ -196,5 +233,17 @@ public class Player : MonoBehaviour
         }
         
     }
+    #endregion
+
+    #region Quest
+    public event Action onQuestLogTogglePressed;
+    public void QuestLogTogglePressed()
+    {
+        if (onQuestLogTogglePressed != null)
+        {
+            onQuestLogTogglePressed();
+        }
+    }
+
     #endregion
 }
