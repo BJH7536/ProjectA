@@ -18,6 +18,7 @@ public abstract class QuestData
         REQUIREMENTS_NOT_MET,
         CAN_START,
         IN_PROGRESS,
+        CAN_FINISH,
         FINISHED
     }
 
@@ -30,5 +31,6 @@ public abstract class QuestData
         goldReward = gold;
     }
 
+    public abstract void updateQuest();
   
 }

@@ -14,6 +14,8 @@ public class Player : MonoBehaviour
     [Tab("Components")]
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private SpriteRenderer sr;
+    [SerializeField] private UI_DialoguePopup popup;
+    [SerializeField] private DialogueManager dialogueManager;
     [Tab("Information")]
     [SerializeField] private float speed = 2f;
     [SerializeField] private Vector2 InputVector = new Vector2(0,0);
@@ -24,10 +26,9 @@ public class Player : MonoBehaviour
     [SerializeField] public GameObject NPC;
     [SerializeField] private bool isNPCAvailable = false;
     [SerializeField] private bool isAction;
-    [SerializeField] private UI_DialoguePopup popup;
-    [SerializeField] private DialogueManager dialogueManager;
     [SerializeField] public QuestManager questManager;
-    [SerializeField] private int QuestIndex;
+    [SerializeField] private int questId;
+    [SerializeField] private NpcData npcdata;
     private bool interactPressed = false;
     public int talkIndex;
 
@@ -42,7 +43,6 @@ public class Player : MonoBehaviour
 
         instance = this;
         NPC = GameObject.Find("NULLNPC");
-        QuestIndex = 10;
     }
 
 
@@ -54,15 +54,22 @@ public class Player : MonoBehaviour
 
     private void OnChange(InputAction.CallbackContext context)
     {
-        if (context.action.actionMap["WeaponExchange"].activeControl.name == "1")
+        string toolkeyNum = context.action.actionMap["WeaponExchange"].activeControl.name;
+        switch (toolkeyNum)
         {
-            transform.GetChild(0).gameObject.SetActive(true);
-            transform.GetChild(1).gameObject.SetActive(false);
-        }
-        else if (context.action.actionMap["WeaponExchange"].activeControl.name == "2")
-        {
-            transform.GetChild(0).gameObject.SetActive(false);
-            transform.GetChild(1).gameObject.SetActive(true);
+            case "1":
+                transform.GetChild(int.Parse(toolkeyNum) -1).gameObject.SetActive(true);
+                transform.GetChild(int.Parse(toolkeyNum)).gameObject.SetActive(false);
+                break;
+            case "2":
+                transform.GetChild(int.Parse(toolkeyNum) - 1).gameObject.SetActive(true);
+                transform.GetChild(int.Parse(toolkeyNum)).gameObject.SetActive(false);
+                break;
+            case "3":
+                transform.GetChild(int.Parse(toolkeyNum) - 1).gameObject.SetActive(true);
+                transform.GetChild(int.Parse(toolkeyNum)).gameObject.SetActive(false);
+                break;
+
         }
     }
 
@@ -111,6 +118,7 @@ public class Player : MonoBehaviour
         if(hit.collider != null)
         {
             isNPCAvailable = true;
+
             //Debug.Log("NPC Available : " + isNPCAvailable);
             NPC = hit.collider.gameObject;
         }
@@ -174,7 +182,7 @@ public class Player : MonoBehaviour
     public void Action(GameObject scanfobj)
     {
        
-        NpcData npcdata= NPC.GetComponent<NpcData>();
+        npcdata= NPC.GetComponent<NpcData>();
         Talk(npcdata.npcId, npcdata.isNpc);
         popup.dialoguePanel.SetActive(isAction);
     }
@@ -182,15 +190,29 @@ public class Player : MonoBehaviour
     void Talk(int id,bool isNpc)
     {
         int questTalkIndex=questManager.GetQuestTalkIndex(id);
-        
 
         string talkData= dialogueManager.GetTalk(id+ questTalkIndex, talkIndex);        //퀘스트번호+NPCId => 퀘스트용 대화 데이터 Id
         if (talkData == null)
         {
+            if (questManager.CheckState(npcdata.questId[npcdata.questIndex]) == QuestData.QuestState.CAN_START)      //시작 가능할때는 시작하기
+            {
+                questManager.AdvanceQuest(npcdata.questId[npcdata.questIndex]);
+            }
+            if (questManager.CheckState(npcdata.questId[npcdata.questIndex]) == QuestData.QuestState.CAN_FINISH)     //끝낼 수 있을 때
+            {
+                questManager.AdvanceQuest(npcdata.questId[npcdata.questIndex]);
+                if(npcdata.questId.Length>1) 
+                {
+                    npcdata.questIndex++;
+                }
+            }
+            //if (questManager.questList[questTalkIndex - questTalkIndex % 10].npcId[questTalkIndex]==id && questManager.questList[questTalkIndex - questTalkIndex % 10].npcId.Length>1)
+            //{
+            //    questManager.questList[questTalkIndex-questTalkIndex%10].updateQuest();
+            //    Debug.Log(questManager.CheckState(questTalkIndex - questTalkIndex % 10));
+            //}
             isAction = false;
             talkIndex = 0;
-            questManager.AdvanceQuest(NPC.GetComponent<NpcData>().questId[0]);
-            //questManager.CheckRequirement(QuestIndex);
             return;
         }
 
@@ -198,7 +220,7 @@ public class Player : MonoBehaviour
         {
             popup.dialogueText.text = talkData.Split(':')[0];
             popup.dialoguePanel.transform.GetChild(3).gameObject.SetActive(true);
-            popup.portraitImage.sprite=NPC.GetComponent<NpcData>().npcPortrait[dialogueManager.GetPortraitIndex(id, int.Parse(talkData.Split(':')[1]))];
+            popup.portraitImage.sprite=npcdata.npcPortrait[dialogueManager.GetPortraitIndex(id, int.Parse(talkData.Split(':')[1]))];
             
             //popup.portraitAnimator.Play(dialogueManager.GetPortraitIndex(id, int.Parse(talkData.Split(':')[1].Trim())));
 
@@ -246,4 +268,6 @@ public class Player : MonoBehaviour
     }
 
     #endregion
+
+    
 }

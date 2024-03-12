@@ -26,8 +26,9 @@ public class DialogueManager : MonoBehaviour
         talkData.Add(2000, new string[] { "안녕?:0", " 너는 누구야?:1" });
 
         //Quest Talk Data
-        talkData.Add(1000+10, new string[] { "어서와:0", " 오른쪽으로 가서 NPC를 만나봐!:1" });
-        talkData.Add(1000 + 11, new string[] { "어:0", "NPC는 만나고왔어?:1" });
+        talkData.Add(1000+10, new string[] { "어서와:0", "옆의 npc2를 만나고올래?:1" });       //퀘스트 대화
+        talkData.Add(1000 + 11, new string[] { "어:0", "npc를 만나고 왔어?:1" });                      //퀘스트 진행 중 대화
+        talkData.Add(1000 + 12, new string[] { "옆의 npc2를 만나고 왔구나:1", "잘했어!:1" });                      //퀘스트 진행 중 대화
         talkData.Add(2000+11, new string[] { "안녕?:0", "무엇을 하러 여기까지 왔어?:1" });
         portraitData.Add(1000 + 0, 0);
         portraitData.Add(1000 + 1, 1);
@@ -40,9 +41,9 @@ public class DialogueManager : MonoBehaviour
 
     public string GetTalk(int id,int talkIndex)
     {
-        if (!talkData.ContainsKey(id))       //퀘스트 진행중의 대사
+        if (!talkData.ContainsKey(id))       //퀘스트 진행중의 대사있는지 체크
         {
-            //퀘스트 대사없을 때는 기본 대사 가져오기
+            //퀘스트 진행 중에는 퀘스트 진행 대사오기
             if (!talkData.ContainsKey(id - id % 10))
             {
                 return GetTalk(id - id % 100, talkIndex);

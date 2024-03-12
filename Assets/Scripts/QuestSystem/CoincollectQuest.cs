@@ -18,4 +18,16 @@ public class CoincollectQuest : QuestData
 
     //코인을 수집함에 따라 퀘스트 진행상황 체크
 
+    public void Getcoin(int coin)
+    {
+        coinsCollected++;
+        updateQuest();
+    }
+    public override void updateQuest()
+    {
+        if (coinsCollected == coinsToComplete)
+        {
+            qs++;
+        }
+    }
 }

@@ -8,7 +8,7 @@ public class QuestManager : MonoBehaviour
     public int questActionIndex;
     public int questIndex;
 
-    Dictionary<int, QuestData> questList;
+    public Dictionary<int, QuestData> questList;
 
     private void Awake()
     {
@@ -19,33 +19,40 @@ public class QuestManager : MonoBehaviour
 
     void GenerateData()
     {
-        questList.Add(10, new CoincollectQuest("코인 모으기", new int[] {1000},10,QuestData.QuestState.CAN_START,10));
+        questList.Add(10, new MeetPeopleQuest("마을 사람 만나기", new int[] {1000,2000},10,QuestData.QuestState.CAN_START,10));
 
-        questList.Add(10, new CoincollectQuest("코인 모으기", new int[] { 1000 }, 10, QuestData.QuestState.CAN_START, 10));
+        questList.Add(20, new CoincollectQuest("마을 사람 만나기", new int[] { 1000,2000}, 20, QuestData.QuestState.CAN_START, 20));
     }
 
-    public void AdvanceQuest(int id)            //
+    public void AdvanceQuest(int id)            //퀘스트 진행상황 업데이트
     {
-        if (questList[id].npcId.Length == 1)
+        if (questList[id].npcId.Length == 1)        //퀘스트에 연관된 npc가 한명일때
         {
+            questActionIndex++;
             questList[questIndex].qs++;
             Debug.Log(questList[id].qs);
             if (questList[questIndex].qs == QuestData.QuestState.FINISHED)
             {
+                questActionIndex = 0;
                 return;
             }
         }
-        else//퀘스트에 연관된 npc가 둘이상이라면
+        else//퀘스트에 연관된 npc가 둘이상이라면 npc 인덱스 늘려주기 -> 다음 npc와의 대화 가능하게
         {
             questActionIndex++;
-            if (questActionIndex == questList[id].npcId.Length)
+            if (questActionIndex == questList[id].npcId.Length && questList[id].qs == QuestData.QuestState.CAN_FINISH)     //퀘스트에 연관된 마지막 npc까지 만난 후 라면
             {
-                AdvanceIndex();   
+                questList[questIndex].qs++;
+                AdvanceIndex();         //다음 퀘스트 진행 가능하게  
             }
-            questList[questIndex].qs++;
+            else if (questList[id].qs == QuestData.QuestState.CAN_START)
+            {
+                questList[questIndex].qs++;
+            }
             Debug.Log(questList[id].qs);
             if (questList[questIndex].qs == QuestData.QuestState.FINISHED)
             {
+                questActionIndex = 0;
                 return;
             }
         }        
@@ -64,32 +71,29 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    public bool CheckQuest(int id)          //퀘스트 진행가능 여부 판단
+    public QuestData.QuestState CheckState(int id)          //퀘스트 진행가능 여부 판단
     {
-        if (questList[id].qs==QuestData.QuestState.CAN_START)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return questList[id].qs;
+    }
+    
+    public void updateState(int id)
+    {
+        questList[id].updateQuest();
     }
 
+    public int getnpcId(int id)
+    {
+        return questList[id].npcId[questActionIndex];
+    }
     public int GetQuestTalkIndex(int id)            //NPC Id가 들어옴
     {
         return questIndex + questActionIndex;
     }
 
-    public void AdvanceIndex()      //스토리 진행에 따라 퀘스트인덱스 값 늘려주기
+    public void AdvanceIndex()      //스토리 진행에 따라 다음 퀘스트가 진행될 수 있게 인덱스 값 증가
     {
         questIndex += 10;
         questActionIndex = 0;
-    }
-
-    public bool FinishQuest(int id)
-    {
-        return true;
     }
 
 }
