@@ -13,14 +13,7 @@ public abstract class QuestData
     [Header("Reward Info")]
     public int goldReward;
 
-    public enum QuestState
-    {
-        REQUIREMENTS_NOT_MET,
-        CAN_START,
-        IN_PROGRESS,
-        CAN_FINISH,
-        FINISHED
-    }
+
 
     public QuestData(string name, int[] npc,int Index,QuestState qs,int gold)
     {
@@ -32,5 +25,7 @@ public abstract class QuestData
     }
 
     public abstract void updateQuest();
+
+    public abstract string getQuestInfo();
   
 }

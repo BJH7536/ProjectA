@@ -14,6 +14,11 @@ public class MeetPeopleQuest : QuestData
         base.goldReward = gold;
     }
 
+    public override string getQuestInfo()
+    {
+        return npcId[1].ToString() + "을 만나고 오세요";
+    }
+
     public override void updateQuest()
     {
         qs++;

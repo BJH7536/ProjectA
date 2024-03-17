@@ -19,9 +19,9 @@ public class QuestManager : MonoBehaviour
 
     void GenerateData()
     {
-        questList.Add(10, new MeetPeopleQuest("마을 사람 만나기", new int[] {1000,2000},10,QuestData.QuestState.CAN_START,10));
+        questList.Add(10, new MeetPeopleQuest("마을 사람 만나기", new int[] {1000,2000},10,QuestState.CAN_START,10));
 
-        questList.Add(20, new CoincollectQuest("마을 사람 만나기", new int[] { 1000,2000}, 20, QuestData.QuestState.CAN_START, 20));
+        questList.Add(20, new CoincollectQuest("마을 사람 만나기", new int[] { 1000,2000}, 20, QuestState.CAN_START, 20));
     }
 
     public void AdvanceQuest(int id)            //퀘스트 진행상황 업데이트
@@ -31,7 +31,7 @@ public class QuestManager : MonoBehaviour
             questActionIndex++;
             questList[questIndex].qs++;
             Debug.Log(questList[id].qs);
-            if (questList[questIndex].qs == QuestData.QuestState.FINISHED)
+            if (questList[questIndex].qs == QuestState.FINISHED)
             {
                 questActionIndex = 0;
                 return;
@@ -40,17 +40,17 @@ public class QuestManager : MonoBehaviour
         else//퀘스트에 연관된 npc가 둘이상이라면 npc 인덱스 늘려주기 -> 다음 npc와의 대화 가능하게
         {
             questActionIndex++;
-            if (questActionIndex == questList[id].npcId.Length && questList[id].qs == QuestData.QuestState.CAN_FINISH)     //퀘스트에 연관된 마지막 npc까지 만난 후 라면
+            if (questActionIndex == questList[id].npcId.Length && questList[id].qs == QuestState.CAN_FINISH)     //퀘스트에 연관된 마지막 npc까지 만난 후 라면
             {
                 questList[questIndex].qs++;
                 AdvanceIndex();         //다음 퀘스트 진행 가능하게  
             }
-            else if (questList[id].qs == QuestData.QuestState.CAN_START)
+            else if (questList[id].qs == QuestState.CAN_START)
             {
                 questList[questIndex].qs++;
             }
             Debug.Log(questList[id].qs);
-            if (questList[questIndex].qs == QuestData.QuestState.FINISHED)
+            if (questList[questIndex].qs == QuestState.FINISHED)
             {
                 questActionIndex = 0;
                 return;
@@ -63,15 +63,15 @@ public class QuestManager : MonoBehaviour
     public void CheckRequirement(int index)             //진행 순서가 맞아진다면 시작가능한 퀘스트 체크
     {
         for (int i = 10; i < questList.Count; i += 10){
-            if (index >= questList[i].Indexrequirment && (questList[i].qs!=QuestData.QuestState.FINISHED || questList[i].qs!=QuestData.QuestState.IN_PROGRESS))
+            if (index >= questList[i].Indexrequirment && (questList[i].qs!=QuestState.FINISHED || questList[i].qs!=QuestState.IN_PROGRESS))
             {
-                questList[i].qs = QuestData.QuestState.CAN_START;
+                questList[i].qs = QuestState.CAN_START;
                 Debug.Log(questList[i].qs);
             }
         }
     }
 
-    public QuestData.QuestState CheckState(int id)          //퀘스트 진행가능 여부 판단
+    public QuestState CheckState(int id)          //퀘스트 진행가능 여부 판단
     {
         return questList[id].qs;
     }

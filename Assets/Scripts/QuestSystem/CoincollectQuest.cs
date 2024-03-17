@@ -23,6 +23,12 @@ public class CoincollectQuest : QuestData
         coinsCollected++;
         updateQuest();
     }
+
+    public override string getQuestInfo()
+    {
+        return "코인을 " + coinsToComplete.ToString() + "개 모아오세요";
+    }
+
     public override void updateQuest()
     {
         if (coinsCollected == coinsToComplete)

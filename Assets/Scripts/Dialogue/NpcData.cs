@@ -17,7 +17,7 @@ public class NpcData : MonoBehaviour
     [Header("Quest Inform")]
     [SerializeField] public int[] questId;
     [SerializeField] public int questIndex;
-    [SerializeField] public QuestData.QuestState qs;
+    [SerializeField] public QuestState qs;
 
     public bool playerInRange;
 
@@ -40,11 +40,11 @@ public class NpcData : MonoBehaviour
             qs = collider.transform.GetComponent<Player>().questManager.CheckState(questId[questIndex]);
             if (questId.Length > 0)          //퀘스트아이디가 있을 때
             {
-                if (qs == QuestData.QuestState.CAN_START)
+                if (qs == QuestState.CAN_START)
                 {
                     visualCue[0].SetActive(true);
                 }
-                else if (qs == QuestData.QuestState.CAN_FINISH)
+                else if (qs == QuestState.CAN_FINISH)
                 {
                     visualCue[1].SetActive(true);
                 }

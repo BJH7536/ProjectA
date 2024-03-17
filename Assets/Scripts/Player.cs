@@ -31,6 +31,7 @@ public class Player : MonoBehaviour
     [SerializeField] private NpcData npcdata;
     private bool interactPressed = false;
     public int talkIndex;
+    public int questnpc;
 
     private static Player instance;
 
@@ -43,6 +44,7 @@ public class Player : MonoBehaviour
 
         instance = this;
         NPC = GameObject.Find("NULLNPC");
+        questnpc = 0;
     }
 
 
@@ -194,11 +196,13 @@ public class Player : MonoBehaviour
         string talkData= dialogueManager.GetTalk(id+ questTalkIndex, talkIndex);        //퀘스트번호+NPCId => 퀘스트용 대화 데이터 Id
         if (talkData == null)
         {
-            if (questManager.CheckState(npcdata.questId[npcdata.questIndex]) == QuestData.QuestState.CAN_START)      //시작 가능할때는 시작하기
+            QuestState qs = questManager.CheckState(npcdata.questId[npcdata.questIndex]);
+            if (qs == QuestState.CAN_START)      //시작 가능할때는 시작하기
             {
                 questManager.AdvanceQuest(npcdata.questId[npcdata.questIndex]);
+                questnpc++;
             }
-            if (questManager.CheckState(npcdata.questId[npcdata.questIndex]) == QuestData.QuestState.CAN_FINISH)     //끝낼 수 있을 때
+            if (qs == QuestState.CAN_FINISH)     //끝낼 수 있을 때
             {
                 questManager.AdvanceQuest(npcdata.questId[npcdata.questIndex]);
                 if(npcdata.questId.Length>1) 
@@ -206,11 +210,15 @@ public class Player : MonoBehaviour
                     npcdata.questIndex++;
                 }
             }
-            //if (questManager.questList[questTalkIndex - questTalkIndex % 10].npcId[questTalkIndex]==id && questManager.questList[questTalkIndex - questTalkIndex % 10].npcId.Length>1)
-            //{
-            //    questManager.questList[questTalkIndex-questTalkIndex%10].updateQuest();
-            //    Debug.Log(questManager.CheckState(questTalkIndex - questTalkIndex % 10));
-            //}
+            if (qs == QuestState.IN_PROGRESS)
+            {
+                if (questManager.questList[questTalkIndex - questTalkIndex % 10].npcId[questnpc] == id && questManager.questList[questTalkIndex - questTalkIndex % 10].npcId.Length > 1)
+                {
+                    questManager.questList[questTalkIndex - questTalkIndex % 10].updateQuest();
+                    Debug.Log(questManager.CheckState(questTalkIndex - questTalkIndex % 10));
+                }
+            }
+            
             isAction = false;
             talkIndex = 0;
             return;
