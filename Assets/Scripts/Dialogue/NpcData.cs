@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.PackageManager.Requests;
@@ -12,14 +13,23 @@ public class NpcData : MonoBehaviour
     [SerializeField] private bool isQuest;
     [Header("NPC Inform")]
     [SerializeField] public int npcId;
+    [SerializeField] public string npcName;
     [SerializeField] public bool isNpc;
     [SerializeField] public Sprite[] npcPortrait;
+    [SerializeField] public string loc;
     [Header("Quest Inform")]
     [SerializeField] public int[] questId;
     [SerializeField] public int questIndex;
     [SerializeField] public QuestState qs;
 
+    private static NpcData instance;
+
     public bool playerInRange;
+
+    public static NpcData GetInstance()
+    {
+        return instance;
+    }
 
     private void Awake()
     {
@@ -29,6 +39,7 @@ public class NpcData : MonoBehaviour
         {
             c.gameObject.SetActive(false);
         }
+        npcName = this.name;
     }
 
 
@@ -62,5 +73,10 @@ public class NpcData : MonoBehaviour
                 c.gameObject.SetActive(false);
             }
         }
+    }
+
+    public NpcData getNpcdata(int npcId)
+    {
+        return this;
     }
 }

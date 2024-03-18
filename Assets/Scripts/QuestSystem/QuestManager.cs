@@ -9,19 +9,26 @@ public class QuestManager : MonoBehaviour
     public int questIndex;
 
     public Dictionary<int, QuestData> questList;
+    private Dictionary<int, NpcData> questNpc;
 
     private void Awake()
     {
-        questList = new Dictionary<int, QuestData>();
+        questList = new Dictionary<int, QuestData>();               //퀘스트 아이디: 퀘스트 정보
+        questNpc = new Dictionary<int, NpcData>();
         questIndex = 10;
         GenerateData();
     }
 
     void GenerateData()
     {
-        questList.Add(10, new MeetPeopleQuest("마을 사람 만나기", new int[] {1000,2000},10,QuestState.CAN_START,10));
+        questList.Add(10, new MeetPeopleQuest("마을 사람 만나기", new int[] {1000,2000},10,QuestState.CAN_START,10,"튜토리얼 마을"));
 
-        questList.Add(20, new CoincollectQuest("마을 사람 만나기", new int[] { 1000,2000}, 20, QuestState.CAN_START, 20));
+        questList.Add(20, new CoincollectQuest("마을 사람 만나기", new int[] { 1000,2000}, 20, QuestState.CAN_START, 20, "튜토리얼 마을"));
+
+        questNpc.Add(1000, NpcData.GetInstance().getNpcdata(1000));
+
+        questNpc.Add(2000, NpcData.GetInstance().getNpcdata(2000));
+
     }
 
     public void AdvanceQuest(int id)            //퀘스트 진행상황 업데이트
@@ -96,4 +103,8 @@ public class QuestManager : MonoBehaviour
         questActionIndex = 0;
     }
 
+    public NpcData GetNpcId(int questId)
+    {
+        return questNpc[questId];
+    }
 }
