@@ -13,10 +13,6 @@ public abstract class QuestData
 
     [Header("Reward Info")]
     public int goldReward;
-    private string name;
-    private int[] npc;
-    private int index;
-    private int gold;
 
     public QuestData(string name, int[] npc,int Index,QuestState qs,int gold,string location)
     {
@@ -28,17 +24,8 @@ public abstract class QuestData
         loc=location;
     }
 
-    protected QuestData(string name, int[] npc, int index, QuestState qs, int gold)
-    {
-        this.name = name;
-        this.npc = npc;
-        this.index = index;
-        this.qs = qs;
-        this.gold = gold;
-    }
-
     public abstract void updateQuest();
 
-    public abstract string getQuestInfo();
+    public abstract QuestData getQuestInfo();
   
 }

@@ -107,4 +107,9 @@ public class QuestManager : MonoBehaviour
     {
         return questNpc[questId];
     }
+
+    public QuestData GetQuestData(int questId)
+    {
+        return questList[questId].getQuestInfo();
+    }
 }

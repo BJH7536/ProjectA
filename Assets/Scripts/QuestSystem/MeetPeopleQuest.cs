@@ -16,9 +16,9 @@ public class MeetPeopleQuest : QuestData
         base.loc = location;
     }
 
-    public override string getQuestInfo()
+    public override QuestData getQuestInfo()
     {
-        return npcId[1].ToString() + "을 만나고 오세요";
+        return this;
     }
 
     public override void updateQuest()

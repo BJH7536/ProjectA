@@ -27,9 +27,9 @@ public class CoincollectQuest : QuestData
         updateQuest();
     }
 
-    public override string getQuestInfo()
+    public override QuestData getQuestInfo()
     {
-        return "코인을 " + coinsToComplete.ToString() + "개 모아오세요";
+        return this;
     }
 
     public override void updateQuest()

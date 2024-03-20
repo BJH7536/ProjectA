@@ -1,18 +1,28 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using UnityEngine;
+
 
 public class DialogueManager : MonoBehaviour
 {
+    private const int npc = 10000;
+    private const int dialogue = 10;
+    
     Dictionary<int, string[]> talkData;
     Dictionary<int,int> portraitData;
     Dictionary<int, string[]> ChoiceData;
+
+    public static int Npc => npc;
+
     //퀘스트 진행상황은 퀘스트 메니저에서 관리
 
 
     private void Awake()
     {
+        
         talkData = new Dictionary<int, string[]>();
         portraitData = new Dictionary<int, int>();
         GenerateData();
@@ -20,6 +30,18 @@ public class DialogueManager : MonoBehaviour
 
     void GenerateData()     //퀘스트번호+NPCId => 퀘스트용 대화 데이터 Id
     {
+        var Textfile = @"c:/";
+        if (File.Exists(Textfile))
+        {
+            using(var reader = new StreamReader(Textfile)) 
+            { 
+                while(!reader.EndOfStream)
+                {
+                    var line = reader.ReadLine();
+                    string[] sentence = line.Split(",");
+                }
+            }
+        }
         //Basic Talk Data
         talkData.Add(1000, new string[] { "안녕?:0", " 이 곳에는 어쩐일이야?:1" });
 
