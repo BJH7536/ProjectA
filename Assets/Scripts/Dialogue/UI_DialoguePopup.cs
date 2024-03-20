@@ -52,12 +52,19 @@ public class UI_DialoguePopup : UI_Popup
     private void Awake()
     {
         instance = this;
+        for (int i = 0; i < choices.Length; i++)
+        {
+            int id = i;
+            //choiceButton[i].onClick.AddListener(() => 
+        }
     }
 
     public static UI_DialoguePopup GetInstance()
     {
         return instance;
     }
+
+    
 
    
 }

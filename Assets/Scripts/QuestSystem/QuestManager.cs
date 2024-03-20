@@ -21,9 +21,9 @@ public class QuestManager : MonoBehaviour
 
     void GenerateData()
     {
-        questList.Add(10, new MeetPeopleQuest("마을 사람 만나기", new int[] {1000,2000},10,QuestState.CAN_START,10,"튜토리얼 마을"));
+        questList.Add(10, new MeetPeopleQuest("대화하기", new int[] {1000},10,QuestState.CAN_START,10,"튜토리얼 마을"));
 
-        questList.Add(20, new CoincollectQuest("마을 사람 만나기", new int[] { 1000,2000}, 20, QuestState.CAN_START, 20, "튜토리얼 마을"));
+        questList.Add(20, new CoincollectQuest("코인 모으기", new int[] {1000}, 20, QuestState.CAN_START, 20, "튜토리얼 마을"));
 
         questNpc.Add(1000, NpcData.GetInstance().getNpcdata(1000));
 
