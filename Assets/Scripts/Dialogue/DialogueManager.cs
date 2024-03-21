@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Xml.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -11,21 +12,26 @@ using UnityEngine.EventSystems;
 
 public class DialogueManager : MonoBehaviour
 {
-    private const int npc = 10000;
-    private const int dialogue = 10;
+    private const int npcId = 10000;
+    private const int dialogueId = 10;
     
     Dictionary<int, string[]> talkData;
     Dictionary<int,int> portraitData;
     Dictionary<int, string[]> ChoiceData;
-    public static int Npc => npc;
+    private NpcData npcdata;
     private Story currentStory;                                     //Ink 로 생성된 텍스트를 받아올 Class변수
+
+    private const string SPEAKER_TAG = "speaker";                   //테그값들 테그값 : 변수
+    private const string PORTRAIT_TAG = "portrait";
+    private const string LAYOUT_TAG = "layout";
+    private UI_DialoguePopup popup;
 
     //퀘스트 진행상황은 퀘스트 메니저에서 관리
 
 
     private void Awake()
     {
-        
+
         talkData = new Dictionary<int, string[]>();
         portraitData = new Dictionary<int, int>();
         GenerateData();
@@ -95,104 +101,98 @@ public class DialogueManager : MonoBehaviour
         return portraitData[id + portraitIndex];
     }
 
-    //public void EnterDialogueMode(TextAsset inkJSON)
-    //{
-    //    currentStory = new Story(inkJSON.text);
-    //    dialogueIsPlaying = true;
-    //    dialoguePanel.SetActive(true);
+    public void EnterDialogueMode(TextAsset inkJSON,NpcData npc)
+    {
+        currentStory = new Story(inkJSON.text);
+        Player.GetInstance().isAction = true;
+        popup.dialoguePanel.SetActive(true);
+        npcdata = npc;
+        //태그 초기화
+        popup.displayNameText.text = "???";
+        ContinueStory();
+    }
 
-    //    //태그 초기화
-    //    displayNameText.text = "???";
-    //    portraitAnimator.Play("default");
-    //    layoutAnimator.Play("right");
+    private void ExitDialogueMode()
+    {
+        Player.GetInstance().isAction= false;
+        popup.dialoguePanel.SetActive(false);
+        popup.dialogueText.text = "";
+    }
 
-    //    ContinueStory();
-    //}
+    private void ContinueStory()
+    {
+        if (currentStory.canContinue)                   //더 보여줄 이야기가 있다면
+        {
+            popup.dialogueText.text = currentStory.Continue();            //한줄 출력
+            DisplayChoices();                                       //선택이 있으면 선택출력
+            //태그관리
+            HandleTags(currentStory.currentTags);
+        }
+        else
+        {
+            ExitDialogueMode();
+        }
+    }
 
-    //private void ExitDialogueMode()
-    //{
-    //    dialogueIsPlaying = false;
-    //    dialoguePanel.SetActive(false);
-    //    dialogueText.text = "";
-    //}
+    private void HandleTags(List<string> currentTags)
+    {
+        foreach (string tag in currentTags)
+        {
+            string[] splitTag = tag.Split(':');
+            if (splitTag.Length != 2)
+            {
+                Debug.LogError("Tag parsed error : " + tag);
+            }
+            string tagkey = splitTag[0].Trim();
+            string tagvalue = splitTag[1].Trim();
 
-    //private void ContinueStory()
-    //{
-    //    if (currentStory.canContinue)                   //더 보여줄 이야기가 있다면
-    //    {
-    //        dialogueText.text = currentStory.Continue();            //한줄 출력
-    //        DisplayChoices();                                       //선택이 있으면 선택출력
-    //        //태그관리
-    //        HandleTags(currentStory.currentTags);
-    //    }
-    //    else
-    //    {
-    //        ExitDialogueMode();
-    //    }
-    //}
+            switch (tagkey)
+            {
+                case SPEAKER_TAG:
+                    popup.displayNameText.text = tagvalue;
+                    break;
+                case PORTRAIT_TAG:
+                    popup.portraitImage.sprite = npcdata.npcPortrait[int.Parse(tagvalue)];
+                    break;
+                default:
+                    Debug.LogWarning("Tag exists but not handled");
+                    break;
+            }
 
-    //private void HandleTags(List<string> currentTags)
-    //{
-    //    foreach (string tag in currentTags)
-    //    {
-    //        string[] splitTag = tag.Split(':');
-    //        if (splitTag.Length != 2)
-    //        {
-    //            Debug.LogError("Tag parsed error : " + tag);
-    //        }
-    //        string tagkey = splitTag[0].Trim();
-    //        string tagvalue = splitTag[1].Trim();
+        }
+    }
 
-    //        switch (tagkey)
-    //        {
-    //            case SPEAKER_TAG:
-    //                displayNameText.text = tagvalue;
-    //                break;
-    //            case PORTRAIT_TAG:
-    //                portraitAnimator.Play(tagvalue);
-    //                break;
-    //            case LAYOUT_TAG:
-    //                layoutAnimator.Play(tagvalue);
-    //                break;
-    //            default:
-    //                Debug.LogWarning("Tag exists but not handled");
-    //                break;
-    //        }
+    private void DisplayChoices()
+    {
+        List<Choice> currentChoices = currentStory.currentChoices;
 
-    //    }
-    //}
+        if (currentChoices.Count > popup.choices.Length)           //현재 선택지의 개수가 버튼의 개수보다 많으면 오류 
+        {
+            Debug.LogError("More choices than ever");
+        }
 
-    //private void DisplayChoices()
-    //{
-    //    List<Choice> currentChoices = currentStory.currentChoices;
+        int index = 0;
+        foreach (Choice choice in currentChoices)
+        {
+            popup.choices[index].gameObject.SetActive(true);
+            popup.choicesText[index].text = choice.text;
+            index++;
+        }
 
-    //    if (currentChoices.Count > choices.Length)           //현재 선택지의 개수가 버튼의 개수보다 많으면 오류 
-    //    {
-    //        Debug.LogError("More choices than ever");
-    //    }
+        for (int i = index; i < popup.choices.Length; i++)
+        {
+            popup.choices[i].gameObject.SetActive(false);
+        }
 
-    //    int index = 0;
-    //    foreach (Choice choice in currentChoices)
-    //    {
-    //        choices[index].gameObject.SetActive(true);
-    //        choicesText[index].text = choice.text;
-    //        index++;
-    //    }
+        StartCoroutine(SelectFirstChoice());
+    }
 
-    //    for (int i = index; i < choices.Length; i++)
-    //    {
-    //        choices[i].gameObject.SetActive(false);
-    //    }
-
-    //    StartCoroutine(SelectFirstChoice());
-    //}
-
-    //private IEnumerator SelectFirstChoice()
-    //{
-    //    EventSystem.current.SetSelectedGameObject(null);
-    //    yield return new WaitForEndOfFrame();
-    //    EventSystem.current.SetSelectedGameObject(choices[0].gameObject);
-    //}
+    private IEnumerator SelectFirstChoice()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+        yield return new WaitForEndOfFrame();
+        EventSystem.current.SetSelectedGameObject(popup.choices[0].gameObject);
+    }
 
     //public void MakeChoice(int choiceIndex, string npcId)
     //{

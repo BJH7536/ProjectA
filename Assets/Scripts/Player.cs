@@ -25,7 +25,7 @@ public class Player : MonoBehaviour
     [Tab("NPC Interaction")]
     [SerializeField] public GameObject NPC;
     [SerializeField] private bool isNPCAvailable = false;
-    [SerializeField] private bool isAction;
+    [SerializeField] public bool isAction;
     [SerializeField] public QuestManager questManager;
     [SerializeField] private int questId;
     [SerializeField] private NpcData npcdata;
@@ -188,28 +188,45 @@ public class Player : MonoBehaviour
        
         npcdata= NPC.GetComponent<NpcData>();
         Talk(npcdata.npcId, npcdata.isNpc);
+        Talk2(npcdata);
         popup.dialoguePanel.SetActive(isAction);
+    }
+
+    void Talk2(NpcData npcdata)
+    {
+        int questTalkIndex = questManager.GetQuestTalkIndex(npcdata.npcId);
+        if (npcdata.isNpc)
+        {
+            switch (questManager.CheckState(npcdata.questId[npcdata.questIndex]))
+            {
+                case QuestState.REQUIREMENTS_NOT_MET:
+                    dialogueManager.EnterDialogueMode(npcdata.Dialogue[0], npcdata);
+                    break;
+                case QuestState.CAN_START:
+                    dialogueManager.EnterDialogueMode(npcdata.Dialogue[1], npcdata);
+                    break;
+                case QuestState.IN_PROGRESS:
+                    dialogueManager.EnterDialogueMode(npcdata.Dialogue[2], npcdata);
+                    break;
+                case QuestState.CAN_FINISH:
+                    dialogueManager.EnterDialogueMode(npcdata.Dialogue[3], npcdata);
+                    break;
+                default:
+                    dialogueManager.EnterDialogueMode(npcdata.Dialogue[0], npcdata);
+                    break;
+            }
+           
+        }
+        else
+        {
+            dialogueManager.EnterDialogueMode(npcdata.Dialogue[0], npcdata);
+        }
     }
 
     void Talk(int id,bool isNpc)
     {
         int questTalkIndex=questManager.GetQuestTalkIndex(id);
 
-        if (questTalkIndex == 0)
-        {
-            foreach (GameObject ch in popup.choices)
-            {
-                ch.gameObject.SetActive(true);
-                popup.SelectFirstChoice();
-            }
-        }
-        else
-        {
-            foreach (GameObject ch in popup.choices)
-            {
-                ch.gameObject.SetActive(false);
-            }
-        }
         string talkData= dialogueManager.GetTalk(id+ questTalkIndex, talkIndex);        //퀘스트번호+NPCId => 퀘스트용 대화 데이터 Id
         if (talkData == null)
         {

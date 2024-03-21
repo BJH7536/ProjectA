@@ -61,12 +61,12 @@ public class UI_DialoguePopup : UI_Popup
 
     }
 
-    public IEnumerator SelectFirstChoice()
-    {
-        EventSystem.current.SetSelectedGameObject(null);
-        yield return new WaitForEndOfFrame();
-        EventSystem.current.SetSelectedGameObject(choices[0].gameObject);
-    }
+    //public IEnumerator SelectFirstChoice()
+    //{
+    //    EventSystem.current.SetSelectedGameObject(null);
+    //    yield return new WaitForEndOfFrame();
+    //    EventSystem.current.SetSelectedGameObject(choices[0].gameObject);
+    //}
 
     public static UI_DialoguePopup GetInstance()
     {
