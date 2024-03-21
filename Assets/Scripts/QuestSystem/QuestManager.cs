@@ -25,9 +25,9 @@ public class QuestManager : MonoBehaviour
 
         questList.Add(20, new CoincollectQuest("코인 모으기", new int[] {1000}, 20, QuestState.CAN_START, 20, "튜토리얼 마을"));
 
-        questNpc.Add(1000, NpcData.GetInstance().getNpcdata(1000));
+        //questNpc.Add(1000, NpcData.GetInstance().getNpcdata(1000));
 
-        questNpc.Add(2000, NpcData.GetInstance().getNpcdata(2000));
+        //questNpc.Add(2000, NpcData.GetInstance().getNpcdata(2000));
 
     }
 

@@ -366,6 +366,7 @@ MonoBehaviour:
   isNpc: 1
   npcPortrait: []
   loc: 
+  Dialogue: []
   questId: 
   questIndex: 0
   qs: 0
@@ -6559,6 +6560,22 @@ PrefabInstance:
       propertyPath: portraitImage
       value: 
       objectReference: {fileID: 2019986933}
+    - target: {fileID: 530071769588551860, guid: d272d641fa635094f8402ea942c6c382, type: 3}
+      propertyPath: choices.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 530071769588551860, guid: d272d641fa635094f8402ea942c6c382, type: 3}
+      propertyPath: choiceButton.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 530071769588551860, guid: d272d641fa635094f8402ea942c6c382, type: 3}
+      propertyPath: choicesText.Array.data[2]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 530071769588551860, guid: d272d641fa635094f8402ea942c6c382, type: 3}
+      propertyPath: choiceButton.Array.data[2]
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 575932154881410310, guid: d272d641fa635094f8402ea942c6c382, type: 3}
       propertyPath: m_LocalScale.y
       value: 0.93483424
@@ -6663,13 +6680,22 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5082945971848264598, guid: d272d641fa635094f8402ea942c6c382, type: 3}
+      propertyPath: m_text
+      value: "\uC608"
+      objectReference: {fileID: 0}
+    - target: {fileID: 5336811801261998789, guid: d272d641fa635094f8402ea942c6c382, type: 3}
+      propertyPath: m_text
+      value: "\uC544\uB2C8\uC624"
+      objectReference: {fileID: 0}
     - target: {fileID: 8682908052636408133, guid: d272d641fa635094f8402ea942c6c382, type: 3}
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300002, guid: d79edf18a76e2654a9ac99f15de8b2b3, type: 3}
     m_RemovedComponents:
     - {fileID: 3677491256822882029, guid: d272d641fa635094f8402ea942c6c382, type: 3}
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 4244275576829074527, guid: d272d641fa635094f8402ea942c6c382, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d272d641fa635094f8402ea942c6c382, type: 3}

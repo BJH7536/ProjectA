@@ -1,3 +1,4 @@
+using Ink.Runtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,8 +15,8 @@ public class DialogueManager : MonoBehaviour
     Dictionary<int, string[]> talkData;
     Dictionary<int,int> portraitData;
     Dictionary<int, string[]> ChoiceData;
-
     public static int Npc => npc;
+    private Story currentStory;                                     //Ink 로 생성된 텍스트를 받아올 Class변수
 
     //퀘스트 진행상황은 퀘스트 메니저에서 관리
 
@@ -80,6 +81,12 @@ public class DialogueManager : MonoBehaviour
         if (talkIndex == talkData[id].Length) return null;
         else return talkData[id][talkIndex];
     }
+
+    //public void GetTalk2(int id, int talkIndex)
+    //{
+    //    currentStory = new Story();
+    //}
+
 
     public int GetPortraitIndex(int id,int portraitIndex)
     {

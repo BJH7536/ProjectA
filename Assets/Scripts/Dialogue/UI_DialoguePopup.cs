@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UI_DialoguePopup : UI_Popup
@@ -43,9 +44,9 @@ public class UI_DialoguePopup : UI_Popup
         displayNameText=dialoguePanel.transform.GetChild(4).GetChild(0).GetComponent<TextMeshProUGUI>();
         portraitImage = dialoguePanel.transform.GetChild(3).transform.GetChild(0).GetComponent<Image>();
 
-        choices = new GameObject[3] { dialoguePanel.transform.GetChild(2).GetChild(0).gameObject, dialoguePanel.transform.GetChild(2).GetChild(1).gameObject,dialoguePanel.transform.GetChild(2).GetChild(2).gameObject };
-        choicesText= new TextMeshProUGUI[3] { choices[0].GetComponent<TextMeshProUGUI>(), choices[1].GetComponent<TextMeshProUGUI>(), choices[2].GetComponent<TextMeshProUGUI>() };
-        choiceButton = new Button[3] { choices[0].GetComponent<Button>(), choices[1].GetComponent<Button>(), choices[2].GetComponent<Button>() };
+        choices = new GameObject[2] { dialoguePanel.transform.GetChild(2).GetChild(0).gameObject, dialoguePanel.transform.GetChild(2).GetChild(1).gameObject };
+        choicesText= new TextMeshProUGUI[2] { choices[0].GetComponent<TextMeshProUGUI>(), choices[1].GetComponent<TextMeshProUGUI>()};
+        choiceButton = new Button[2] { choices[0].GetComponent<Button>(), choices[1].GetComponent<Button>() };
         return true;
     }
 
@@ -55,8 +56,16 @@ public class UI_DialoguePopup : UI_Popup
         for (int i = 0; i < choices.Length; i++)
         {
             int id = i;
-            //choiceButton[i].onClick.AddListener(() => 
+            choiceButton[i].onClick.AddListener(() => makeChoice(id));
         }
+
+    }
+
+    public IEnumerator SelectFirstChoice()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+        yield return new WaitForEndOfFrame();
+        EventSystem.current.SetSelectedGameObject(choices[0].gameObject);
     }
 
     public static UI_DialoguePopup GetInstance()
@@ -64,7 +73,11 @@ public class UI_DialoguePopup : UI_Popup
         return instance;
     }
 
-    
+
+    public void makeChoice(int choice)
+    {
+        Player.GetInstance().select = choice;
+    }
 
    
 }

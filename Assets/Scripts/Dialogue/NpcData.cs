@@ -17,6 +17,7 @@ public class NpcData : MonoBehaviour
     [SerializeField] public bool isNpc;
     [SerializeField] public Sprite[] npcPortrait;
     [SerializeField] public string loc;
+    [SerializeField] public TextAsset[] Dialogue;
     [Header("Quest Inform")]
     [SerializeField] public int[] questId;
     [SerializeField] public int questIndex;
