@@ -57,7 +57,7 @@ public class DialogueManager : MonoBehaviour
         talkData.Add(2000, new string[] { "안녕?:0", " 너는 누구야?:1" });
 
         //Quest Talk Data
-        talkData.Add(1000+10, new string[] { "어서와:0", "옆의 npc2를 만나고올래?:1" });       //퀘스트 대화
+        talkData.Add(1000+10, new string[] { "어서와:0", "옆의 npc2를 만나고올래?:1:예:아니오" });       //퀘스트 대화
         talkData.Add(1000 + 11, new string[] { "어:0", "npc를 만나고 왔어?:1" });                      //퀘스트 진행 중 대화
         talkData.Add(1000 + 12, new string[] { "옆의 npc2를 만나고 왔구나:1", "잘했어!:1" });                      //퀘스트 진행 중 대화
         talkData.Add(2000+11, new string[] { "안녕?:0", "무엇을 하러 여기까지 왔어?:1" });
@@ -101,91 +101,7 @@ public class DialogueManager : MonoBehaviour
         return portraitData[id + portraitIndex];
     }
 
-    public void EnterDialogueMode(TextAsset inkJSON,NpcData npc)
-    {
-        currentStory = new Story(inkJSON.text);
-        Player.GetInstance().isAction = true;
-        popup.dialoguePanel.SetActive(true);
-        npcdata = npc;
-        //태그 초기화
-        popup.displayNameText.text = "???";
-        ContinueStory();
-    }
-
-    private void ExitDialogueMode()
-    {
-        Player.GetInstance().isAction= false;
-        popup.dialoguePanel.SetActive(false);
-        popup.dialogueText.text = "";
-    }
-
-    private void ContinueStory()
-    {
-        if (currentStory.canContinue)                   //더 보여줄 이야기가 있다면
-        {
-            popup.dialogueText.text = currentStory.Continue();            //한줄 출력
-            DisplayChoices();                                       //선택이 있으면 선택출력
-            //태그관리
-            HandleTags(currentStory.currentTags);
-        }
-        else
-        {
-            ExitDialogueMode();
-        }
-    }
-
-    private void HandleTags(List<string> currentTags)
-    {
-        foreach (string tag in currentTags)
-        {
-            string[] splitTag = tag.Split(':');
-            if (splitTag.Length != 2)
-            {
-                Debug.LogError("Tag parsed error : " + tag);
-            }
-            string tagkey = splitTag[0].Trim();
-            string tagvalue = splitTag[1].Trim();
-
-            switch (tagkey)
-            {
-                case SPEAKER_TAG:
-                    popup.displayNameText.text = tagvalue;
-                    break;
-                case PORTRAIT_TAG:
-                    popup.portraitImage.sprite = npcdata.npcPortrait[int.Parse(tagvalue)];
-                    break;
-                default:
-                    Debug.LogWarning("Tag exists but not handled");
-                    break;
-            }
-
-        }
-    }
-
-    private void DisplayChoices()
-    {
-        List<Choice> currentChoices = currentStory.currentChoices;
-
-        if (currentChoices.Count > popup.choices.Length)           //현재 선택지의 개수가 버튼의 개수보다 많으면 오류 
-        {
-            Debug.LogError("More choices than ever");
-        }
-
-        int index = 0;
-        foreach (Choice choice in currentChoices)
-        {
-            popup.choices[index].gameObject.SetActive(true);
-            popup.choicesText[index].text = choice.text;
-            index++;
-        }
-
-        for (int i = index; i < popup.choices.Length; i++)
-        {
-            popup.choices[i].gameObject.SetActive(false);
-        }
-
-        StartCoroutine(SelectFirstChoice());
-    }
+   
 
     private IEnumerator SelectFirstChoice()
     {

@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
 using UnityEngine.Serialization;
@@ -185,43 +186,11 @@ public class Player : MonoBehaviour
 
     public void Action(GameObject scanfobj)
     {
-       
         npcdata= NPC.GetComponent<NpcData>();
         Talk(npcdata.npcId, npcdata.isNpc);
-        Talk2(npcdata);
         popup.dialoguePanel.SetActive(isAction);
     }
 
-    void Talk2(NpcData npcdata)
-    {
-        int questTalkIndex = questManager.GetQuestTalkIndex(npcdata.npcId);
-        if (npcdata.isNpc)
-        {
-            switch (questManager.CheckState(npcdata.questId[npcdata.questIndex]))
-            {
-                case QuestState.REQUIREMENTS_NOT_MET:
-                    dialogueManager.EnterDialogueMode(npcdata.Dialogue[0], npcdata);
-                    break;
-                case QuestState.CAN_START:
-                    dialogueManager.EnterDialogueMode(npcdata.Dialogue[1], npcdata);
-                    break;
-                case QuestState.IN_PROGRESS:
-                    dialogueManager.EnterDialogueMode(npcdata.Dialogue[2], npcdata);
-                    break;
-                case QuestState.CAN_FINISH:
-                    dialogueManager.EnterDialogueMode(npcdata.Dialogue[3], npcdata);
-                    break;
-                default:
-                    dialogueManager.EnterDialogueMode(npcdata.Dialogue[0], npcdata);
-                    break;
-            }
-           
-        }
-        else
-        {
-            dialogueManager.EnterDialogueMode(npcdata.Dialogue[0], npcdata);
-        }
-    }
 
     void Talk(int id,bool isNpc)
     {
@@ -231,7 +200,7 @@ public class Player : MonoBehaviour
         if (talkData == null)
         {
             QuestState qs = questManager.CheckState(npcdata.questId[npcdata.questIndex]);
-            if (qs == QuestState.CAN_START&& select==0)      //시작 가능할때는 시작하기
+            if (qs == QuestState.CAN_START)      //시작 가능할때는 시작하기
             {
                 questManager.AdvanceQuest(npcdata.questId[npcdata.questIndex]);
                 questnpc++;
@@ -260,10 +229,15 @@ public class Player : MonoBehaviour
 
         if (isNpc)
         {
-            popup.dialogueText.text = talkData.Split(':')[0];
+            string[] sen = talkData.Split(':');
+            popup.dialogueText.text = sen[0];
             popup.dialoguePanel.transform.GetChild(3).gameObject.SetActive(true);
-            popup.portraitImage.sprite=npcdata.npcPortrait[dialogueManager.GetPortraitIndex(id, int.Parse(talkData.Split(':')[1]))];
-            
+            popup.portraitImage.sprite=npcdata.npcPortrait[dialogueManager.GetPortraitIndex(id, int.Parse(sen[1]))];
+            if (sen.Length > 3)
+            {
+                popup.choicep.gameObject.SetActive(true);
+                StartCoroutine(SelectFirstChoice());
+            }  
             //popup.portraitAnimator.Play(dialogueManager.GetPortraitIndex(id, int.Parse(talkData.Split(':')[1].Trim())));
 
             popup.displayNameText.text = NPC.name;
@@ -280,8 +254,12 @@ public class Player : MonoBehaviour
        
     }
 
-
-    void
+    public IEnumerator SelectFirstChoice()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+        yield return new WaitForEndOfFrame();
+        EventSystem.current.SetSelectedGameObject(popup.choices[0].gameObject);
+    }
 
     #endregion
 

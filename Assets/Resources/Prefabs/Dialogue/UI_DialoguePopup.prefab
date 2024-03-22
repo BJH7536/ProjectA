@@ -806,7 +806,7 @@ MonoBehaviour:
   dialoguePanel: {fileID: 4966398904718950824}
   dialogueText: {fileID: 7303437023593948572}
   displayNameText: {fileID: 5478495677640288414}
-  portraitAnimator: {fileID: 3677491256822882029}
+  portraitImage: {fileID: 0}
   choicesText:
   - {fileID: 5082945971848264598}
   - {fileID: 5336811801261998789}
@@ -815,6 +815,7 @@ MonoBehaviour:
   - {fileID: 7130393394148229932}
   - {fileID: 7991335772944266093}
   - {fileID: 4244275576829074527}
+  choicep: {fileID: 3291751374012260126}
   choiceButton:
   - {fileID: 1828564328287421290}
   - {fileID: 3670464958395931038}
