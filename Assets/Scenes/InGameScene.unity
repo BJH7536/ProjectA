@@ -365,6 +365,7 @@ MonoBehaviour:
   npcName: 
   isNpc: 1
   npcPortrait: []
+  dialogue: []
   loc: 
   questId: 
   questIndex: 0
@@ -2815,6 +2816,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71e9e3818dc1f8c4e849fcef9e83bf6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  popup: {fileID: 1200508362}
 --- !u!4 &1284134875
 Transform:
   m_ObjectHideFlags: 0
@@ -6493,6 +6495,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8553003120145340662, guid: a28f78075aec8d449aa0fccc03c591a9, type: 3}
+      propertyPath: dialogue.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8553003120145340662, guid: a28f78075aec8d449aa0fccc03c591a9, type: 3}
       propertyPath: visualCue.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -6512,6 +6518,22 @@ PrefabInstance:
       propertyPath: questId.Array.data[0]
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 8553003120145340662, guid: a28f78075aec8d449aa0fccc03c591a9, type: 3}
+      propertyPath: dialogue.Array.data[0]
+      value: 
+      objectReference: {fileID: 4900000, guid: a11efdd3e4d8f9d4a8b3e0aa5b45d014, type: 3}
+    - target: {fileID: 8553003120145340662, guid: a28f78075aec8d449aa0fccc03c591a9, type: 3}
+      propertyPath: dialogue.Array.data[1]
+      value: 
+      objectReference: {fileID: 4900000, guid: 4b86fb034a8e3994785599ad87a9837b, type: 3}
+    - target: {fileID: 8553003120145340662, guid: a28f78075aec8d449aa0fccc03c591a9, type: 3}
+      propertyPath: dialogue.Array.data[2]
+      value: 
+      objectReference: {fileID: 4900000, guid: a11efdd3e4d8f9d4a8b3e0aa5b45d014, type: 3}
+    - target: {fileID: 8553003120145340662, guid: a28f78075aec8d449aa0fccc03c591a9, type: 3}
+      propertyPath: dialogue.Array.data[3]
+      value: 
+      objectReference: {fileID: 4900000, guid: a11efdd3e4d8f9d4a8b3e0aa5b45d014, type: 3}
     - target: {fileID: 8553003120145340662, guid: a28f78075aec8d449aa0fccc03c591a9, type: 3}
       propertyPath: npcPortrait.Array.size
       value: 3

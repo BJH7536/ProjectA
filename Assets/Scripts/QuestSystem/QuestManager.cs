@@ -11,12 +11,20 @@ public class QuestManager : MonoBehaviour
     public Dictionary<int, QuestData> questList;
     private Dictionary<int, NpcData> questNpc;
 
+    private static QuestManager instance;
+
     private void Awake()
     {
+        instance = this;
         questList = new Dictionary<int, QuestData>();               //퀘스트 아이디: 퀘스트 정보
         questNpc = new Dictionary<int, NpcData>();
         questIndex = 10;
         GenerateData();
+    }
+
+    public static QuestManager GetInstance()
+    {
+        return instance;
     }
 
     void GenerateData()
@@ -35,7 +43,7 @@ public class QuestManager : MonoBehaviour
     {
         if (questList[id].npcId.Length == 1)        //퀘스트에 연관된 npc가 한명일때
         {
-            questActionIndex++;
+            questActionIndex++;                     
             questList[questIndex].qs++;
             Debug.Log(questList[id].qs);
             if (questList[questIndex].qs == QuestState.FINISHED)
@@ -78,7 +86,7 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    public QuestState CheckState(int id)          //퀘스트 진행가능 여부 판단
+    public QuestState CheckState(int id)          //퀘스트 현재 상태 반환
     {
         return questList[id].qs;
     }
@@ -112,4 +120,9 @@ public class QuestManager : MonoBehaviour
     {
         return questList[questId].getQuestInfo();
     }
+
+    //public int GetcurrentActionIndex(int questId)
+    //{
+    //    return questActionIndex;
+    //}
 }

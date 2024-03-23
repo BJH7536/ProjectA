@@ -56,15 +56,17 @@ public class UI_DialoguePopup : UI_Popup
     private void Awake()
     {
         instance = this;
+       
+
+    }
+    private void Start()
+    {
         for (int i = 0; i < choices.Length; i++)
         {
             int id = i;
-            choiceButton[i].onClick.AddListener(() => makeChoice(id));
+            choiceButton[i].onClick.AddListener(() => DialogueManager.GetInstance().makeChoice(id));
         }
-
     }
-
-    
 
     public static UI_DialoguePopup GetInstance()
     {
@@ -72,10 +74,7 @@ public class UI_DialoguePopup : UI_Popup
     }
 
 
-    public void makeChoice(int choice)
-    {
-        Player.GetInstance().select = choice;
-    }
+    
 
    
 }

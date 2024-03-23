@@ -16,10 +16,11 @@ public class NpcData : MonoBehaviour
     [SerializeField] public string npcName;
     [SerializeField] public bool isNpc;
     [SerializeField] public Sprite[] npcPortrait;
+    [SerializeField] public TextAsset[] dialogue;
     [SerializeField] public string loc;
     [Header("Quest Inform")]
     [SerializeField] public int[] questId;
-    [SerializeField] public int questIndex;
+    [SerializeField] public int questIndex;                     //여러퀘스트를 가지고있을때 지금 진행가능한 퀘스트번호 
     [SerializeField] public QuestState qs;
 
     private static NpcData instance;
@@ -40,6 +41,20 @@ public class NpcData : MonoBehaviour
             c.gameObject.SetActive(false);
         }
         npcName = this.name;
+    }
+
+    private void Update()
+    {
+        if (playerInRange && !DialogueManager.GetInstance().dialogueIsPlaying)
+        {
+            if (Player.GetInstance().GetInteractPressed())
+            {
+                DialogueManager.GetInstance().GetTalk2(this);
+            }
+        }
+        else
+        {
+        }
     }
 
 

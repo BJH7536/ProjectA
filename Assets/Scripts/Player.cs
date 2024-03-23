@@ -181,85 +181,17 @@ public class Player : MonoBehaviour
     #region Interact
     void InteractPerformed(InputAction.CallbackContext context)
     {
-        Action(NPC);
+        interactPressed = true;
     }
 
-    public void Action(GameObject scanfobj)
+    public bool GetInteractPressed()
     {
-        npcdata= NPC.GetComponent<NpcData>();
-        Talk(npcdata.npcId, npcdata.isNpc);
-        popup.dialoguePanel.SetActive(isAction);
+        bool result = interactPressed;
+        interactPressed = false;
+        return result;
     }
 
-
-    void Talk(int id,bool isNpc)
-    {
-        int questTalkIndex=questManager.GetQuestTalkIndex(id);
-
-        string talkData= dialogueManager.GetTalk(id+ questTalkIndex, talkIndex);        //퀘스트번호+NPCId => 퀘스트용 대화 데이터 Id
-        if (talkData == null)
-        {
-            QuestState qs = questManager.CheckState(npcdata.questId[npcdata.questIndex]);
-            if (qs == QuestState.CAN_START)      //시작 가능할때는 시작하기
-            {
-                questManager.AdvanceQuest(npcdata.questId[npcdata.questIndex]);
-                questnpc++;
-            }
-            if (qs == QuestState.CAN_FINISH)     //끝낼 수 있을 때
-            {
-                questManager.AdvanceQuest(npcdata.questId[npcdata.questIndex]);
-                if(npcdata.questId.Length>1) 
-                {
-                    npcdata.questIndex++;
-                }
-            }
-            //if (qs == QuestState.IN_PROGRESS)
-            //{
-            //    if (questManager.questList[questTalkIndex - questTalkIndex % 10].npcId[questnpc] == id && questManager.questList[questTalkIndex - questTalkIndex % 10].npcId.Length > 1)
-            //    {
-            //        questManager.questList[questTalkIndex - questTalkIndex % 10].updateQuest();
-            //        Debug.Log(questManager.CheckState(questTalkIndex - questTalkIndex % 10));
-            //    }
-            //}
-            
-            isAction = false;
-            talkIndex = 0;
-            return;
-        }
-
-        if (isNpc)
-        {
-            string[] sen = talkData.Split(':');
-            popup.dialogueText.text = sen[0];
-            popup.dialoguePanel.transform.GetChild(3).gameObject.SetActive(true);
-            popup.portraitImage.sprite=npcdata.npcPortrait[dialogueManager.GetPortraitIndex(id, int.Parse(sen[1]))];
-            if (sen.Length > 3)
-            {
-                popup.choicep.gameObject.SetActive(true);
-                StartCoroutine(SelectFirstChoice());
-            }  
-            //popup.portraitAnimator.Play(dialogueManager.GetPortraitIndex(id, int.Parse(talkData.Split(':')[1].Trim())));
-
-            popup.displayNameText.text = NPC.name;
-        }
-        else
-        {
-            popup.dialogueText.text = talkData;
-            popup.dialoguePanel.transform.GetChild(3).gameObject.SetActive(false);
-            popup.displayNameText.text = NPC.name;
-        }
-
-        isAction = true;
-        talkIndex++;
-       
-    }
-
-    public IEnumerator SelectFirstChoice()
-    {
-        EventSystem.current.SetSelectedGameObject(null);
-        yield return new WaitForEndOfFrame();
-        EventSystem.current.SetSelectedGameObject(popup.choices[0].gameObject);
-    }
+ 
 
     #endregion
 
