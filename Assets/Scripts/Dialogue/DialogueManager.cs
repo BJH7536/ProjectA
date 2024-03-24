@@ -157,7 +157,7 @@ public class DialogueManager : MonoBehaviour
                 QuestState qs = QuestManager.GetInstance().CheckState(npcdata.questId[npcdata.questIndex]);
                 if (qs == QuestState.CAN_START)
                 {
-                    QuestManager.GetInstance().AdvanceQuest(npcdata.questId[npcdata.questIndex]);
+                    QuestManager.GetInstance().AdvanceQuest(npcdata.questId[npcdata.questIndex],npcdata);
                 }
             }
         }

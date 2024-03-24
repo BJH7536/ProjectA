@@ -33,22 +33,19 @@ public class QuestManager : MonoBehaviour
 
         questList.Add(20, new CoincollectQuest("코인 모으기", new int[] {1000}, 20, QuestState.CAN_START, 20, "튜토리얼 마을"));
 
-        //questNpc.Add(1000, NpcData.GetInstance().getNpcdata(1000));
-
-        //questNpc.Add(2000, NpcData.GetInstance().getNpcdata(2000));
-
     }
 
-    public void AdvanceQuest(int id)            //퀘스트 진행상황 업데이트
+    public void AdvanceQuest(int id,NpcData npc)            //퀘스트 진행상황 업데이트
     {
         if (questList[id].npcId.Length == 1)        //퀘스트에 연관된 npc가 한명일때
         {
-            questActionIndex++;                     
+            questActionIndex++;
+            questNpc.Add(id, npc);
             questList[questIndex].qs++;
             Debug.Log(questList[id].qs);
             if (questList[questIndex].qs == QuestState.FINISHED)
             {
-                questActionIndex = 0;
+                AdvanceIndex(id);
                 return;
             }
         }
@@ -58,7 +55,7 @@ public class QuestManager : MonoBehaviour
             if (questActionIndex == questList[id].npcId.Length && questList[id].qs == QuestState.CAN_FINISH)     //퀘스트에 연관된 마지막 npc까지 만난 후 라면
             {
                 questList[questIndex].qs++;
-                AdvanceIndex();         //다음 퀘스트 진행 가능하게  
+                AdvanceIndex(id);         //다음 퀘스트 진행 가능하게  
             }
             else if (questList[id].qs == QuestState.CAN_START)
             {
@@ -105,9 +102,13 @@ public class QuestManager : MonoBehaviour
         return questIndex + questActionIndex;
     }
 
-    public void AdvanceIndex()      //스토리 진행에 따라 다음 퀘스트가 진행될 수 있게 인덱스 값 증가
+    public void AdvanceIndex(int qid)      //스토리 진행에 따라 다음 퀘스트가 진행될 수 있게 인덱스 값 증가
     {
         questIndex += 10;
+        if (questNpc[qid].questId.Length>1)
+        {
+            questNpc[qid].questIndex++;
+        }
         questActionIndex = 0;
     }
 
