@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,4 +12,22 @@ public class QuestLog : MonoBehaviour
 
     public TextMeshProUGUI QuestTitle;
     public TextMeshProUGUI QuestDescription;
+    public ScrollRect QuestScrollRect;
+
+    private void Start()
+    {
+        QuestScrollRect.normalizedPosition = new Vector2(1f, 1f);                   //사이즈 동적으로 바꿔주기
+
+        Vector2 size = QuestScrollRect.content.sizeDelta;                   
+        size.y = 5000f;
+        QuestScrollRect.content.sizeDelta = size;
+    }
+
+    void addQuest(int id)
+    {
+        GameObject qeust= Resources.Load("QuestButton") as GameObject;
+
+        GameObject instance = PrefabUtility.InstantiatePrefab(qeust) as GameObject;     //프리팹추가해주기
+        instance.transform.SetParent(QuestScrollRect.content.transform);
+    }
 }
